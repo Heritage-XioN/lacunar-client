@@ -12,7 +12,7 @@ export function Navbar() {
 			<nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-10 lg:px-16'>
 				{/* Logo */}
 				<a href='#' className='text-xs font-bold uppercase tracking-[0.25em] text-white sm:text-sm'>
-					VANTAGESTRATEGY
+					LACUNAR CONSULTING FIRM
 				</a>
 
 				{/* Desktop nav links */}

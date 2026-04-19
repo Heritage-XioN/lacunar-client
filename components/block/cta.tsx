@@ -2,9 +2,10 @@ import { Button } from '../ui/button';
 import { StatCard } from '../ui/stat-card';
 
 const stats = [
-	{ value: '15+', label: 'Years of Market Authority' },
-	{ value: '$2.4B', label: 'Client Portfolio Strategy' },
-	{ value: '400+', label: 'Institutional Partnerships' },
+	{ value: 'Millions of naira in assets under management.', label: 'Substantial Portfolio Growth' },
+	{ value: 'largest student investment societies in Nigeria', label: 'Institutional Foundation' },
+	{ value: 'worlds leading finance certification body (CFA Institute)', label: 'Premier Professional Alignment' },
+	{ value: 'international community of finance professionals and consultants', label: 'Global Expert Network' },
 ];
 
 export function CtaSection() {
@@ -20,9 +21,7 @@ export function CtaSection() {
 							<em className='italic text-gold-300'>Legacy?</em>
 						</h2>
 						<p className='max-w-lg text-base leading-relaxed text-slate-400'>
-							Join an elite circle of organizations that prioritize strategic
-							clarity over noise. Your journey toward architectural excellence
-							begins with a single conversation.
+							Lets help you build assets that funds your lifestyle
 						</p>
 						<div className='flex flex-col gap-4 pt-2 sm:flex-row'>
 							<Button

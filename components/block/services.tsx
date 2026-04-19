@@ -3,27 +3,39 @@ import { ServiceCard } from '../ui/service-card';
 
 const services = [
 	{
-		title: 'Strategic Planning',
+		title: 'Personal Finance',
 		description:
-			'Long-term visioning and tactical roadmaps that ensure sustainable growth and market dominance.',
+			'Advisory focused on helping individuals build financial discipline, manage cash flow, and grow wealth through structured planning, investment guidance, and long-term financial strategies.',
 		icon: BarChart3,
 	},
 	{
-		title: 'Digital Transformation',
+		title: 'Sustaining Family Wealth',
 		description:
-			'Modernizing legacy systems with bespoke technological stacks tailored to your organizational DNA.',
+			'Focused on preserving and transferring wealth across generations, including governance structures, asset protection, succession planning, and financial education for continuity.',
 		icon: Globe,
 	},
 	{
-		title: 'Market Analysis',
+		title: 'Business Consulting',
 		description:
-			'Deep dive intelligence and competitive mapping to identify untapped opportunities and mitigate risk.',
+			'End-to-end support for businesses covering strategy development, operational restructuring, growth execution, and performance optimisation to build scalable and efficient organisations.',
 		icon: LineChart,
 	},
 	{
-		title: 'Operational Excellence',
+		title: 'Government / NGO Consulting',
 		description:
-			'Streamlining internal architectures for peak performance and unprecedented resource efficiency.',
+			'Advisory for public and non-profit institutions on policy design, program execution, operational efficiency, and impact measurement to ensure sustainable and measurable outcomes.',
+		icon: Settings,
+	},
+	{
+		title: 'Lacunar Business Model',
+		description:
+			'A unique equity-aligned consulting approach where Lacunar combines advisory with execution, partnering with clients to build systems while sharing in long-term value creation.',
+		icon: Settings,
+	},
+	{
+		title: 'Investment and capital advisory',
+		description:
+			'Advisory focused on capital raising, investment strategy, and financial structuring, helping clients access funding, deploy capital effectively, and maximize returns.',
 		icon: Settings,
 	},
 ];
@@ -38,14 +50,12 @@ export function Services() {
 						Core Service Areas
 					</h2>
 					<p className='mt-4 text-sm leading-relaxed text-slate-500 sm:text-base'>
-						We operate at the intersection of traditional wisdom and digital frontiers. Our
-						services are designed for leaders who demand rigorous analysis
-						and architectural execution.
+						We focus on building sustainable financial systems and scalable organisations, combining strategic advisory with hands-on implementation across individuals, businesses, and institutions.
 					</p>
 				</div>
 
 				{/* Service cards grid */}
-				<div className='mt-14 grid gap-px bg-slate-200 border border-slate-200 sm:grid-cols-2 lg:grid-cols-4'>
+				<div className='mt-14 grid gap-0.5 bg-slate-200 border border-slate-200 sm:grid-cols-2 lg:grid-cols-3 '>
 					{services.map((service) => (
 						<ServiceCard
 							key={service.title}

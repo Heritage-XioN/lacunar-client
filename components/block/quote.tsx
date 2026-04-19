@@ -12,17 +12,17 @@ export function QuoteSection() {
 				{/* Quote */}
 				<blockquote>
 					<p className='text-xl leading-relaxed text-white sm:text-2xl lg:text-3xl'>
-						&ldquo;Strategy is not a document; it is a{' '}
+						&ldquo;Where Strategy Meets Execution; it is a{' '}
 						<em className='font-semibold italic text-gold-400 underline decoration-gold-500/40 underline-offset-4'>
 							philosophy of action
 						</em>{' '}
-						that defines the trajectory of an institution for decades.&rdquo;
+						that defines nurturing missionaries with gratitude.&rdquo;
 					</p>
 				</blockquote>
 
 				{/* Attribution */}
 				<p className='mt-8 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400'>
-					— The Vantage Ethos
+					— The Lacunar Voice
 				</p>
 			</div>
 		</section>

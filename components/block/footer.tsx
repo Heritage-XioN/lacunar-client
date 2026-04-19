@@ -9,7 +9,7 @@ export function Footer() {
 					{/* Brand */}
 					<div>
 						<p className='text-sm font-bold uppercase tracking-[0.25em] text-white'>
-							Vantage Strategy
+							LACUNAR CONSULTING FIRM
 						</p>
 						<p className='mt-4 max-w-md text-sm leading-relaxed text-slate-500'>
 							Curated execution for the modern institution. We provide the

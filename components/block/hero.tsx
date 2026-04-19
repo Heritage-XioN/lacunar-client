@@ -29,15 +29,13 @@ export function Hero() {
 
 					{/* Heading */}
 					<h1 className='text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl'>
-						The <em className='italic text-gold-300 not-italic font-normal' style={{ fontStyle: 'italic' }}>Informed</em>{' '}
-						Authority.
+						<em className='italic text-gold-300 not-italic font-normal' style={{ fontStyle: 'italic' }}>Purpose </em>{' '}
+						and innovation.
 					</h1>
 
 					{/* Subtitle */}
 					<p className='max-w-lg text-base leading-relaxed text-slate-300 sm:text-lg'>
-						Bespoke architectural strategy for institutions ready to
-						redefine their market position through precision, data, and
-						legacy-building insights.
+						We exists to bridge structural gaps in African startups, using innovative, system-driven solutions to build scalable, high-impact businesses.
 					</p>
 
 					{/* CTAs */}
