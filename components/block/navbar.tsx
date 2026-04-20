@@ -11,7 +11,7 @@ export function Navbar() {
 
 			<nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-10 lg:px-16'>
 				{/* Logo */}
-				<a href='#' className='text-xs font-bold uppercase tracking-[0.25em] text-white sm:text-sm'>
+				<a href='#' className='text-xs font-bold uppercase tracking-widest text-white sm:text-sm'>
 					LACUNAR CONSULTING FIRM
 				</a>
 
@@ -40,13 +40,14 @@ export function Navbar() {
 				</div>
 
 				{/* Mobile menu button */}
-				<button
-					type='button'
-					className='inline-flex h-10 w-10 items-center justify-center text-white md:hidden'
+				<Button
+					variant='ghost'
+					size='icon'
+					className='text-white md:hidden hover:text-white hover:bg-white/10'
 					aria-label='Open menu'
 				>
 					<Menu className='h-6 w-6' />
-				</button>
+				</Button>
 			</nav>
 		</header>
 	);

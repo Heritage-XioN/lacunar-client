@@ -8,7 +8,7 @@ export function Footer() {
 				<div className='grid gap-10 md:grid-cols-[1.6fr_0.9fr_0.9fr]'>
 					{/* Brand */}
 					<div>
-						<p className='text-sm font-bold uppercase tracking-[0.25em] text-white'>
+						<p className='text-sm font-bold uppercase tracking-widest text-white'>
 							LACUNAR CONSULTING FIRM
 						</p>
 						<p className='mt-4 max-w-md text-sm leading-relaxed text-slate-500'>
@@ -20,7 +20,7 @@ export function Footer() {
 
 					{/* Navigation */}
 					<div>
-						<p className='text-xs font-semibold uppercase tracking-[0.25em] text-slate-500'>
+						<p className='text-xs font-semibold uppercase tracking-widest text-slate-500'>
 							Navigation
 						</p>
 						<ul className='mt-5 space-y-3'>
@@ -39,7 +39,7 @@ export function Footer() {
 
 					{/* Connect */}
 					<div>
-						<p className='text-xs font-semibold uppercase tracking-[0.25em] text-slate-500'>
+						<p className='text-xs font-semibold uppercase tracking-widest text-slate-500'>
 							Connect
 						</p>
 						<ul className='mt-5 space-y-3'>

@@ -8,7 +8,7 @@ export function ModernizationCta() {
 
 					{/* Left — Gold accent panel */}
 					<div className='bg-gold-500 p-10 sm:p-14'>
-						<p className='text-[10px] font-bold uppercase tracking-[0.2em] text-navy-900/60'>
+						<p className='text-xs font-bold uppercase tracking-widest text-navy-900/60'>
 							Capability: Institutional Transformation
 						</p>
 						<h2 className='mt-4 max-w-sm text-3xl font-semibold italic leading-tight text-navy-950 sm:text-4xl'>
@@ -39,7 +39,7 @@ export function ModernizationCta() {
 						</p>
 						<div className='mt-8 space-y-6'>
 							<div>
-								<p className='text-sm font-semibold text-white font-[family-name:var(--font-body)]'>
+								<p className='font-sans text-sm font-semibold text-white'>
 									Implementing &lsquo;Parallel Governance&rsquo;
 								</p>
 								<p className='mt-1 text-xs leading-relaxed text-slate-500'>
@@ -49,7 +49,7 @@ export function ModernizationCta() {
 								</p>
 							</div>
 							<div>
-								<p className='text-sm font-semibold text-white font-[family-name:var(--font-body)]'>
+								<p className='font-sans text-sm font-semibold text-white'>
 									Precision Architecture
 								</p>
 								<p className='mt-1 text-xs leading-relaxed text-slate-500'>

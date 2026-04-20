@@ -9,7 +9,7 @@ export function ConsultationNavbar() {
 				{/* Logo */}
 				<a
 					href='/'
-					className='text-xs font-bold uppercase tracking-[0.2em] text-navy-900 sm:text-sm'
+					className='text-xs font-bold uppercase tracking-widest text-navy-900 sm:text-sm'
 				>
 					Architectural Strategy
 				</a>
@@ -20,7 +20,7 @@ export function ConsultationNavbar() {
 						<a
 							key={link}
 							href='#'
-							className='text-sm text-slate-500 transition-colors duration-200 hover:text-navy-900 font-[family-name:var(--font-body)]'
+							className='font-sans text-sm text-slate-500 transition-colors duration-200 hover:text-navy-900'
 						>
 							{link}
 						</a>
@@ -31,7 +31,7 @@ export function ConsultationNavbar() {
 				<div className='hidden md:block'>
 					<Button
 						variant='secondary'
-						className='bg-navy-900 px-5 py-2.5 text-[10px] uppercase tracking-[0.2em] text-white hover:bg-navy-800 border-navy-900'
+						className='border-navy-900 bg-navy-900 px-5 py-2.5 text-xs uppercase tracking-widest text-white hover:bg-navy-800'
 						type='button'
 					>
 						Book Consultation

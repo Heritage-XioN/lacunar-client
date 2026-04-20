@@ -23,13 +23,13 @@ export function Hero() {
 			<div className='relative mx-auto max-w-7xl px-6 sm:px-10 lg:px-16'>
 				<div className='max-w-2xl space-y-6'>
 					{/* Label */}
-					<p className='text-xs font-semibold uppercase tracking-[0.3em] text-gold-400'>
+					<p className='text-xs font-semibold uppercase tracking-widest text-gold-400'>
 						Strategy &amp; Growth
 					</p>
 
 					{/* Heading */}
 					<h1 className='text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl'>
-						<em className='italic text-gold-300 not-italic font-normal' style={{ fontStyle: 'italic' }}>Purpose </em>{' '}
+						<em className='font-normal italic text-gold-300'>Purpose </em>{' '}
 						and innovation.
 					</h1>
 

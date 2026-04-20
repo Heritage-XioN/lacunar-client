@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react';
 import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
 	{ label: 'Services', active: true },
@@ -26,11 +27,12 @@ export function ServicesNavbar() {
 						<a
 							key={link.label}
 							href='#'
-							className={`relative text-sm transition-colors duration-200 font-[family-name:var(--font-body)] ${
+							className={cn(
+								'relative font-sans text-sm transition-colors duration-200',
 								link.active
 									? 'text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-gold-500'
 									: 'text-slate-400 hover:text-white'
-							}`}
+							)}
 						>
 							{link.label}
 						</a>
@@ -39,13 +41,14 @@ export function ServicesNavbar() {
 
 				{/* Right side — Search + CTA */}
 				<div className='hidden items-center gap-4 md:flex'>
-					<button
-						type='button'
-						className='inline-flex h-9 w-9 items-center justify-center text-slate-400 hover:text-white transition-colors'
+					<Button
+						variant='ghost'
+						size='icon'
+						className='text-slate-400 hover:text-white transition-colors'
 						aria-label='Search'
 					>
 						<Search className='h-4 w-4' />
-					</button>
+					</Button>
 					<Button
 						variant='primary'
 						className='px-5 py-2 text-xs uppercase tracking-wider'

@@ -10,10 +10,10 @@ export function ConsultationFooter() {
 						<p className='text-xl italic text-navy-900'>
 							Vantage Strategy
 						</p>
-						<p className='mt-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400'>
+						<p className='mt-3 text-xs font-semibold uppercase tracking-widest text-slate-400'>
 							© 2024 Architectural Strategy. All rights reserved.
 						</p>
-						<p className='mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400'>
+						<p className='mt-1 text-xs font-semibold uppercase tracking-widest text-slate-400'>
 							Cultivating the Informed Authority
 						</p>
 					</div>
@@ -24,7 +24,7 @@ export function ConsultationFooter() {
 							<a
 								key={link}
 								href='#'
-								className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400 transition-colors hover:text-navy-900'
+								className='text-xs font-semibold uppercase tracking-widest text-slate-400 transition-colors hover:text-navy-900'
 							>
 								{link}
 							</a>

@@ -5,7 +5,7 @@ export function AdvisorProfile() {
 	return (
 		<aside className='space-y-6'>
 			{/* Headshot */}
-			<div className='relative aspect-[3/4] w-full max-w-[280px] overflow-hidden'>
+			<div className='relative aspect-[3/4] w-full max-w-72 overflow-hidden'>
 				<Image
 					src='/avatar-alistair.png'
 					alt='Dr. Alistair Thorne'
@@ -20,7 +20,7 @@ export function AdvisorProfile() {
 				<h2 className='text-2xl font-semibold italic text-navy-900 sm:text-3xl'>
 					Dr. Alistair Thorne
 				</h2>
-				<p className='mt-1 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400'>
+				<p className='mt-1 text-xs font-bold uppercase tracking-widest text-slate-400'>
 					Principal Advisor
 				</p>
 			</div>
@@ -36,13 +36,13 @@ export function AdvisorProfile() {
 			<div className='space-y-3'>
 				<div className='flex items-center gap-2'>
 					<BadgeCheck className='h-4 w-4 text-gold-500' />
-					<span className='text-[10px] font-bold uppercase tracking-[0.2em] text-navy-900'>
+					<span className='text-xs font-bold uppercase tracking-widest text-navy-900'>
 						Verified Expert Authority
 					</span>
 				</div>
 				<div className='flex items-center gap-2'>
 					<BadgeCheck className='h-4 w-4 text-gold-500' />
-					<span className='text-[10px] font-bold uppercase tracking-[0.2em] text-navy-900'>
+					<span className='text-xs font-bold uppercase tracking-widest text-navy-900'>
 						Global Strategy Liaison
 					</span>
 				</div>

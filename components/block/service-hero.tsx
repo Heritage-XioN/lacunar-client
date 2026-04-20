@@ -21,7 +21,7 @@ export function ServiceHero() {
 			<div className='relative mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-20 lg:px-16 lg:py-24'>
 				{/* Badge */}
 				<div className='mb-6'>
-					<span className='inline-block bg-gold-500 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-navy-950'>
+					<span className='inline-block bg-gold-500 px-3 py-1 text-xs font-bold uppercase tracking-widest text-navy-950'>
 						Strategic Planning
 					</span>
 				</div>

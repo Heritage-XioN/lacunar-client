@@ -58,10 +58,10 @@ export function Outcomes() {
 								key={stat.label}
 								className='bg-gold-500 p-8'
 							>
-								<p className='text-3xl font-bold text-navy-950 font-[family-name:var(--font-heading)] sm:text-4xl'>
+								<p className='font-sans text-3xl font-bold text-navy-950 sm:text-4xl'>
 									{stat.value}
 								</p>
-								<p className='mt-2 text-[10px] font-semibold uppercase tracking-widest text-navy-900/60'>
+								<p className='mt-2 text-xs font-semibold uppercase tracking-widest text-navy-900/60'>
 									{stat.label}
 								</p>
 							</div>

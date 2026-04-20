@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Check, Info } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 const daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
@@ -35,10 +36,10 @@ export function BookingForm() {
 			{/* Section 01 — Temporal Selection */}
 			<div>
 				<div className='flex items-center gap-3'>
-					<span className='inline-flex h-6 w-7 items-center justify-center bg-navy-900 text-[10px] font-bold text-white'>
+					<span className='inline-flex h-6 w-7 items-center justify-center bg-navy-900 text-xs font-bold text-white'>
 						01
 					</span>
-					<span className='text-[10px] font-bold uppercase tracking-[0.25em] text-navy-900'>
+					<span className='text-xs font-bold uppercase tracking-widest text-navy-900'>
 						Temporal Selection
 					</span>
 				</div>
@@ -48,24 +49,24 @@ export function BookingForm() {
 					<div className='rounded border border-slate-200 p-5'>
 						{/* Month header */}
 						<div className='flex items-center justify-between'>
-							<span className='text-sm font-semibold text-navy-900 font-[family-name:var(--font-body)]'>
+							<span className='font-sans text-sm font-semibold text-navy-900'>
 								October 2024
 							</span>
 							<div className='flex gap-1'>
-								<button
-									type='button'
-									className='inline-flex h-7 w-7 items-center justify-center text-slate-400 hover:text-navy-900 transition-colors'
+								<Button
+									variant='ghost'
+									className='h-7 w-7 p-0 text-slate-400 transition-colors hover:text-navy-900'
 									aria-label='Previous month'
 								>
 									<ChevronLeft className='h-4 w-4' />
-								</button>
-								<button
-									type='button'
-									className='inline-flex h-7 w-7 items-center justify-center text-slate-400 hover:text-navy-900 transition-colors'
+								</Button>
+								<Button
+									variant='ghost'
+									className='h-7 w-7 p-0 text-slate-400 transition-colors hover:text-navy-900'
 									aria-label='Next month'
 								>
 									<ChevronRight className='h-4 w-4' />
-								</button>
+								</Button>
 							</div>
 						</div>
 
@@ -74,7 +75,7 @@ export function BookingForm() {
 							{daysOfWeek.map((day) => (
 								<span
 									key={day}
-									className='py-2 text-[10px] font-semibold uppercase tracking-wider text-slate-400'
+									className='py-2 text-xs font-semibold uppercase tracking-wider text-slate-400'
 								>
 									{day}
 								</span>
@@ -94,12 +95,12 @@ export function BookingForm() {
 									return (
 										<span
 											key={`${rowIndex}-${colIndex}`}
-											className={`
-												inline-flex h-9 w-9 items-center justify-center mx-auto text-sm font-[family-name:var(--font-body)]
-												${isGrayed ? 'text-slate-300' : 'text-navy-900'}
-												${isSelected ? 'rounded-full bg-navy-900 text-white font-semibold' : ''}
-												${!isGrayed && !isSelected ? 'hover:bg-slate-50 rounded-full cursor-pointer transition-colors' : ''}
-											`}
+											className={cn(
+												'mx-auto inline-flex h-9 w-9 items-center justify-center font-sans text-sm',
+												isGrayed ? 'text-slate-300' : 'text-navy-900',
+												isSelected && 'rounded-full bg-navy-900 font-semibold text-white',
+												!isGrayed && !isSelected && 'cursor-pointer rounded-full transition-colors hover:bg-slate-50'
+											)}
 										>
 											{day}
 										</span>
@@ -111,27 +112,26 @@ export function BookingForm() {
 
 					{/* Available intervals */}
 					<div className='space-y-3'>
-						<p className='text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400'>
+						<p className='text-xs font-bold uppercase tracking-widest text-slate-400'>
 							Available Intervals (GMT+1)
 						</p>
 						<div className='space-y-2'>
 							{timeSlots.map((slot) => (
-								<button
+								<Button
 									key={slot.time}
-									type='button'
-									className={`
-										flex w-full items-center justify-between border px-5 py-3.5 text-sm transition-colors font-[family-name:var(--font-body)]
-										${slot.selected
-											? 'border-navy-900 bg-navy-900/[0.03] text-navy-900 font-semibold'
+									variant='outline'
+									className={cn(
+										'flex h-auto w-full items-center justify-between border px-5 py-3.5 font-sans text-sm transition-colors',
+										slot.selected
+											? 'border-navy-900 bg-navy-900/[0.03] font-semibold text-navy-900 hover:bg-navy-900/[0.05] hover:text-navy-900'
 											: 'border-slate-200 text-slate-500 hover:border-slate-300'
-										}
-									`}
+									)}
 								>
 									<span>{slot.time}</span>
 									{slot.selected && (
 										<Check className='h-4 w-4 text-navy-900' />
 									)}
-								</button>
+								</Button>
 							))}
 						</div>
 					</div>
@@ -141,10 +141,10 @@ export function BookingForm() {
 			{/* Section 02 — Institutional Context */}
 			<div>
 				<div className='flex items-center gap-3'>
-					<span className='inline-flex h-6 w-7 items-center justify-center bg-navy-900 text-[10px] font-bold text-white'>
+					<span className='inline-flex h-6 w-7 items-center justify-center bg-navy-900 text-xs font-bold text-white'>
 						02
 					</span>
-					<span className='text-[10px] font-bold uppercase tracking-[0.25em] text-navy-900'>
+					<span className='text-xs font-bold uppercase tracking-widest text-navy-900'>
 						Institutional Context
 					</span>
 				</div>
@@ -172,7 +172,7 @@ export function BookingForm() {
 			<div className='flex flex-col items-start gap-5 border-t border-slate-100 pt-8 sm:flex-row sm:items-center sm:justify-between'>
 				<div className='flex items-start gap-3'>
 					<Info className='mt-0.5 h-4 w-4 shrink-0 text-gold-500' />
-					<p className='text-[10px] font-semibold uppercase leading-relaxed tracking-[0.15em] text-slate-400'>
+					<p className='text-xs font-semibold uppercase leading-relaxed tracking-widest text-slate-400'>
 						Sessions are strictly confidential. A secure<br />
 						brief will be dispatched upon confirmation.
 					</p>
