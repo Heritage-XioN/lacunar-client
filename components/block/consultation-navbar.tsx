@@ -33,8 +33,9 @@ export function ConsultationNavbar() {
 						variant='secondary'
 						className='border-navy-900 bg-navy-900 px-5 py-2.5 text-xs uppercase tracking-widest text-white hover:bg-navy-800'
 						type='button'
+						asChild
 					>
-						Book Consultation
+						<a href='/consultation-categories'>Book Consultation</a>
 					</Button>
 				</div>
 			</nav>

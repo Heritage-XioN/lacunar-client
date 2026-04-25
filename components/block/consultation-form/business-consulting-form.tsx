@@ -1,0 +1,760 @@
+'use client';
+
+import { useForm } from '@tanstack/react-form';
+import z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Slider } from '@/components/ui/slider';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+
+const businessConsultingSchema = z.object({
+	businessPhase: z.string().min(1, 'Select a business phase'),
+	interventionAreas: z.array(z.string()),
+	existingSystems: z.array(z.string()),
+	recognizedBenefits: z
+		.array(z.string())
+		.min(2, 'Select exactly 2 benefits')
+		.max(2, 'Select exactly 2 benefits'),
+	vision12Month: z.string().optional(),
+	tomorrowQuestion: z.string().optional(),
+	primaryBottleneck: z.string().min(1, 'Select a primary bottleneck'),
+	organizationalReadiness: z.array(z.number()),
+	valueIndicator: z.string().optional(),
+	relationshipSuccess: z
+		.string()
+		.min(1, 'Relationship success definition is required'),
+	fullName: z.string().min(1, 'Full name is required'),
+	businessEmail: z.string().email('Invalid email address'),
+	phoneNumber: z.string().optional(),
+});
+
+export function BusinessConsultingForm() {
+	const form = useForm({
+		defaultValues: {
+			businessPhase: '',
+			interventionAreas: [] as string[],
+			existingSystems: [] as string[],
+			recognizedBenefits: [] as string[],
+			vision12Month: '',
+			tomorrowQuestion: '',
+			primaryBottleneck: '',
+			organizationalReadiness: [4], // 4 = High Receptivity
+			valueIndicator: '',
+			relationshipSuccess: '',
+			fullName: '',
+			businessEmail: '',
+			phoneNumber: '',
+		},
+		onSubmit: async ({ value }) => {
+			console.log('Form submitted:', value);
+			alert('Business Consulting Discovery Submitted! Check console for data.');
+		},
+	});
+
+	return (
+		<div className='min-h-screen bg-slate-50 font-sans text-navy-900 pb-32'>
+			{/* Top Nav (Optional/Inline) */}
+			<header className='flex items-center justify-between px-6 py-6 md:px-12'>
+				<div className='font-serif text-xl font-bold tracking-tight'>
+					The Architectural Editorial
+				</div>
+				<div className='hidden items-center gap-8 text-sm text-slate-500 md:flex'>
+					<a href='#' className='hover:text-navy-900'>
+						Our Strategy
+					</a>
+					<a href='#' className='hover:text-navy-900'>
+						Case Studies
+					</a>
+					<a href='#' className='hover:text-navy-900'>
+						Insights
+					</a>
+					<Button className='bg-navy-900 px-6 py-2 text-[10px] uppercase tracking-widest text-white hover:bg-navy-800 rounded-none'>
+						Contact Us
+					</Button>
+				</div>
+			</header>
+
+			<div className='mx-auto max-w-4xl px-4 pt-16 sm:px-6 lg:px-8'>
+				{/* Form Header */}
+				<div className='mb-24 text-center'>
+					<p className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400'>
+						Consulting Intake
+					</p>
+					<h1 className='mt-4 font-serif text-4xl font-normal text-navy-900 md:text-5xl lg:text-6xl'>
+						Lacunar Business Consulting
+						<br />
+						Discovery
+					</h1>
+					<p className='mx-auto mt-6 max-w-xl text-sm italic leading-relaxed text-slate-500'>
+						Identifying the structural gaps in your business to engineer
+						enduring growth.
+					</p>
+				</div>
+
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						form.handleSubmit();
+					}}
+					className='space-y-24'
+				>
+					{/* 01. Business Maturity */}
+					<section className='space-y-8'>
+						<div className='border-l-4 border-gold-500 pl-4'>
+							<h2 className='font-serif text-2xl text-navy-900'>
+								01. Business Maturity
+							</h2>
+							<p className='mt-1 text-xs text-slate-500'>
+								Establishing your current operational baseline.
+							</p>
+						</div>
+
+						<div className='space-y-12 pl-5'>
+							<form.Field
+								name='businessPhase'
+								validators={{
+									onChange: businessConsultingSchema.shape.businessPhase,
+								}}
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-4'
+										>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Which phase best describes your business?
+											</FieldLabel>
+											<RadioGroup
+												value={field.state.value}
+												onValueChange={field.handleChange}
+												className='grid grid-cols-1 gap-4 sm:grid-cols-3'
+											>
+												{[
+													{
+														id: 'inception',
+														label: 'Inception',
+														desc: 'Establishing product-market fit and initial traction.',
+													},
+													{
+														id: 'expansion',
+														label: 'Expansion',
+														desc: 'Scaling operations, team size, and market reach.',
+													},
+													{
+														id: 'legacy',
+														label: 'Legacy',
+														desc: 'Refining operations, maximizing yield, and impact.',
+													},
+												].map((opt) => (
+													<div
+														key={opt.id}
+														className='relative flex flex-col gap-2 bg-slate-100 p-6 transition-colors hover:bg-slate-200'
+													>
+														<RadioGroupItem
+															value={opt.label}
+															id={opt.id}
+															className='absolute right-4 top-4'
+														/>
+														<Label
+															htmlFor={opt.id}
+															className='cursor-pointer font-serif text-lg text-navy-900'
+														>
+															{opt.label}
+														</Label>
+														<p className='text-[10px] text-slate-500'>
+															{opt.desc}
+														</p>
+													</div>
+												))}
+											</RadioGroup>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='interventionAreas'
+								children={(field) => {
+									const options = [
+										'Strategic Planning',
+										'Talent Acquisition',
+										'Client Relations',
+										'Capital Allocation',
+										'Brand Direction',
+										'R&D Innovation',
+									];
+									return (
+										<Field className='flex flex-col gap-4'>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Areas requiring intervention (Select all)
+											</FieldLabel>
+											<div className='flex flex-wrap gap-3'>
+												{options.map((opt) => {
+													const isSelected = field.state.value.includes(opt);
+													return (
+														<button
+															type='button'
+															key={opt}
+															onClick={() => {
+																if (isSelected) {
+																	field.handleChange(
+																		field.state.value.filter(
+																			(val) => val !== opt,
+																		),
+																	);
+																} else {
+																	field.handleChange([
+																		...field.state.value,
+																		opt,
+																	]);
+																}
+															}}
+															className={cn(
+																'rounded-full border px-6 py-2 text-[10px] font-semibold tracking-widest transition-colors',
+																isSelected
+																	? 'border-navy-900 bg-navy-900 text-white'
+																	: 'border-slate-300 bg-white text-navy-900 hover:border-navy-900',
+															)}
+														>
+															{opt}
+														</button>
+													);
+												})}
+											</div>
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='existingSystems'
+								children={(field) => {
+									const options = [
+										'Standard Operating Procedures (SOPs)',
+										'CRM & Customer Lifecycle Tracking',
+										'Annual Budgeting & Forecasting',
+										'Defined Management Hierarchy',
+									];
+									return (
+										<Field className='flex flex-col gap-6 bg-slate-100 p-8'>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Existing systems in place
+											</FieldLabel>
+											<div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+												{options.map((opt) => (
+													<label
+														key={opt}
+														className='flex cursor-pointer items-center gap-3'
+													>
+														<Checkbox
+															checked={field.state.value.includes(opt)}
+															onCheckedChange={(checked) => {
+																if (checked) {
+																	field.handleChange([
+																		...field.state.value,
+																		opt,
+																	]);
+																} else {
+																	field.handleChange(
+																		field.state.value.filter(
+																			(val) => val !== opt,
+																		),
+																	);
+																}
+															}}
+															className='border-slate-400'
+														/>
+														<span className='text-xs text-slate-600'>
+															{opt}
+														</span>
+													</label>
+												))}
+											</div>
+										</Field>
+									);
+								}}
+							/>
+						</div>
+					</section>
+
+					{/* 02. Vision & Outcomes */}
+					<section className='space-y-8'>
+						<div className='border-l-4 border-gold-500 pl-4'>
+							<h2 className='font-serif text-2xl text-navy-900'>
+								02. Vision & Outcomes
+							</h2>
+							<p className='mt-1 text-xs text-slate-500'>
+								Defining the metrics of success.
+							</p>
+						</div>
+
+						<div className='space-y-12 pl-5'>
+							<form.Field
+								name='recognizedBenefits'
+								validators={{
+									onChange: businessConsultingSchema.shape.recognizedBenefits,
+								}}
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									const options = ['GROWTH', 'REVENUE', 'EFFICIENCY', 'EXIT'];
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-4'
+										>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Recognized Benefits (Select 2)
+											</FieldLabel>
+											<div className='flex gap-2 sm:gap-4'>
+												{options.map((opt) => {
+													const isSelected = field.state.value.includes(opt);
+													return (
+														<button
+															type='button'
+															key={opt}
+															onClick={() => {
+																if (isSelected) {
+																	field.handleChange(
+																		field.state.value.filter(
+																			(val) => val !== opt,
+																		),
+																	);
+																} else {
+																	if (field.state.value.length < 2) {
+																		field.handleChange([
+																			...field.state.value,
+																			opt,
+																		]);
+																	}
+																}
+															}}
+															disabled={
+																!isSelected && field.state.value.length >= 2
+															}
+															className={cn(
+																'flex-1 border px-2 py-4 text-[10px] font-semibold tracking-widest transition-colors',
+																isSelected
+																	? 'border-navy-900 bg-navy-900 text-white'
+																	: 'border-slate-200 bg-white text-navy-900 hover:border-slate-300 disabled:opacity-50',
+															)}
+														>
+															{opt}
+														</button>
+													);
+												})}
+											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='vision12Month'
+								children={(field) => {
+									return (
+										<Field className='flex flex-col gap-3'>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												12-Month Vision
+											</FieldLabel>
+											<Textarea
+												label=''
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder='Describe the architectural shift you want to see in your business...'
+												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
+											/>
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='tomorrowQuestion'
+								children={(field) => {
+									return (
+										<Field className='flex flex-col gap-3 pt-6'>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												The Tomorrow Question
+											</FieldLabel>
+											<Textarea
+												label=''
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder="What keeps you awake when contemplating next quarter's growth?"
+												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
+											/>
+										</Field>
+									);
+								}}
+							/>
+						</div>
+					</section>
+
+					{/* 03. Roadblocks & Readiness */}
+					<section className='space-y-8'>
+						<div className='border-l-4 border-gold-500 pl-4'>
+							<h2 className='font-serif text-2xl text-navy-900'>
+								03. Roadblocks & Readiness
+							</h2>
+							<p className='mt-1 text-xs text-slate-500'>
+								Assessing constraints and capacity for change.
+							</p>
+						</div>
+
+						<div className='space-y-12 pl-5'>
+							<form.Field
+								name='primaryBottleneck'
+								validators={{
+									onChange: businessConsultingSchema.shape.primaryBottleneck,
+								}}
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-6'
+										>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Primary Bottleneck
+											</FieldLabel>
+											<RadioGroup
+												value={field.state.value}
+												onValueChange={field.handleChange}
+												className='flex flex-col gap-6'
+											>
+												{[
+													{
+														id: 'capital',
+														label: 'Capital Flow',
+														desc: 'Growth is restricted by funding or mismanaged margins.',
+													},
+													{
+														id: 'operations',
+														label: 'Operational Friction',
+														desc: 'Inefficient workflows or internal team misalignment.',
+													},
+													{
+														id: 'leads',
+														label: 'Lead Generation',
+														desc: 'Capacity is there, but the pipeline is unpredictable.',
+													},
+												].map((opt) => (
+													<div key={opt.id} className='flex items-start gap-3'>
+														<RadioGroupItem
+															value={opt.label}
+															id={opt.id}
+															className='mt-0.5'
+														/>
+														<div className='grid gap-1'>
+															<Label
+																htmlFor={opt.id}
+																className='cursor-pointer text-sm font-medium text-navy-900'
+															>
+																{opt.label}
+															</Label>
+															<p className='text-[10px] italic text-slate-500'>
+																{opt.desc}
+															</p>
+														</div>
+													</div>
+												))}
+											</RadioGroup>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='organizationalReadiness'
+								children={(field) => {
+									const readinessLabels = [
+										'Unstable',
+										'Preparing',
+										'Open',
+										'High Receptivity',
+										'Fully Agile',
+									];
+									const currentValue = field.state.value[0];
+									return (
+										<Field className='flex flex-col gap-6 pt-4'>
+											<div className='flex items-center justify-between'>
+												<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+													Organizational Readiness
+												</FieldLabel>
+												<span className='font-serif text-lg italic text-gold-500'>
+													{readinessLabels[currentValue - 1]}
+												</span>
+											</div>
+											<div className='px-2'>
+												<Slider
+													value={field.state.value}
+													onValueChange={field.handleChange}
+													max={5}
+													min={1}
+													step={1}
+													className='py-4'
+												/>
+												<div className='mt-2 flex justify-between text-[8px] sm:text-[10px] uppercase tracking-widest text-slate-400'>
+													{readinessLabels.map((label) => (
+														<span key={label}>{label}</span>
+													))}
+												</div>
+											</div>
+										</Field>
+									);
+								}}
+							/>
+						</div>
+					</section>
+
+					{/* 04. Anchor Metric */}
+					<section className='space-y-8'>
+						<div className='border-l-4 border-gold-500 pl-4'>
+							<h2 className='font-serif text-2xl text-navy-900'>
+								04. Anchor Metric
+							</h2>
+							<p className='mt-1 text-xs text-slate-500'>
+								Quantifying the value of the engagement.
+							</p>
+						</div>
+
+						<div className='space-y-12 pl-5'>
+							<form.Field
+								name='valueIndicator'
+								children={(field) => {
+									return (
+										<Field className='flex flex-col gap-3'>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												12-Month Value Indicator
+											</FieldLabel>
+											<Textarea
+												label=''
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder='What is the single most important number we should track?'
+												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
+											/>
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='relationshipSuccess'
+								validators={{
+									onChange: businessConsultingSchema.shape.relationshipSuccess,
+								}}
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-3 pt-6'
+										>
+											<div className='flex items-center justify-between'>
+												<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+													Relationship Success Definition
+												</FieldLabel>
+												<span className='text-[8px] font-bold uppercase tracking-widest text-red-500'>
+													Required
+												</span>
+											</div>
+											<Textarea
+												label=''
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder='If we meet again in 12 months, what must have happened for you to be satisfied?'
+												className={cn(
+													'min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none',
+													isInvalid && 'border-red-400',
+												)}
+											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+						</div>
+					</section>
+
+					{/* Final Details */}
+					<section className='bg-navy-950 p-8 md:p-12 text-white'>
+						<div className='mb-12 text-center'>
+							<h2 className='font-serif text-2xl text-white'>Final Details</h2>
+							<p className='mt-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400'>
+								When should we send your initial architectural audit?
+							</p>
+						</div>
+
+						<div className='grid gap-8 sm:grid-cols-2'>
+							<form.Field
+								name='fullName'
+								validators={{
+									onChange: businessConsultingSchema.shape.fullName,
+								}}
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-1.5'
+										>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Full Name
+											</FieldLabel>
+											<input
+												type='text'
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder='Jane Adler Starling'
+												className='border-b border-slate-600 bg-transparent pb-2 pt-2 text-sm text-white focus:border-gold-500 focus:outline-none'
+											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+							<form.Field
+								name='businessEmail'
+								validators={{
+									onChange: businessConsultingSchema.shape.businessEmail,
+								}}
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-1.5'
+										>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Business Email
+											</FieldLabel>
+											<input
+												type='email'
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder='j.adler@firm.com'
+												className='border-b border-slate-600 bg-transparent pb-2 pt-2 text-sm text-white focus:border-gold-500 focus:outline-none'
+											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+							<form.Field
+								name='phoneNumber'
+								children={(field) => {
+									return (
+										<Field className='flex flex-col gap-1.5 sm:col-span-2'>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+												Phone Number
+											</FieldLabel>
+											<input
+												type='tel'
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												placeholder='+1 (000) 000-0000'
+												className='border-b border-slate-600 bg-transparent pb-2 pt-2 text-sm text-white focus:border-gold-500 focus:outline-none'
+											/>
+										</Field>
+									);
+								}}
+							/>
+						</div>
+
+						<div className='mt-16 flex justify-center'>
+							<form.Subscribe
+								selector={(state) => [state.canSubmit, state.isSubmitting]}
+								children={([canSubmit, isSubmitting]) => (
+									<Button
+										type='submit'
+										disabled={!canSubmit}
+										className='w-full sm:w-auto min-w-[280px] rounded-none bg-[#F3E1B6] px-8 py-6 text-[10px] font-bold uppercase tracking-widest text-navy-900 hover:bg-[#e6d3a3]'
+									>
+										{isSubmitting
+											? 'Submitting...'
+											: 'Submit Discovery Dossier'}
+									</Button>
+								)}
+							/>
+						</div>
+					</section>
+
+					{/* Image and Quote */}
+					<div className='flex flex-col gap-8 md:flex-row md:items-center py-16'>
+						<div className='h-48 w-full bg-slate-200 md:w-1/3 relative overflow-hidden'>
+							<div className='absolute inset-0 flex items-center justify-center opacity-30'>
+								<div className='absolute h-[200%] w-px -rotate-45 bg-slate-400' />
+								<div className='absolute h-[200%] w-px rotate-45 bg-slate-400' />
+							</div>
+						</div>
+						<div className='flex-1 space-y-6'>
+							<h3 className='font-serif text-2xl font-normal italic text-navy-900 md:text-3xl'>
+								"Growth is not merely the addition of mass, but the refinement
+								of structure."
+							</h3>
+							<p className='text-sm text-slate-500'>
+								Our intake process is designed to bypass surface-level symptoms
+								and address the underlying architecture of your enterprise. Each
+								response helps us map the Lacunar Strategy before your initial
+								consultation.
+							</p>
+							<div className='flex items-center gap-4'>
+								<div className='h-px w-8 bg-gold-500' />
+								<span className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
+									The Lacunar Philosophy
+								</span>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	);
+}
+
+function Label({ className, ...props }: React.ComponentProps<'label'>) {
+	return (
+		<label
+			className={cn(
+				'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+				className,
+			)}
+			{...props}
+		/>
+	);
+}

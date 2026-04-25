@@ -34,8 +34,9 @@ export function Navbar() {
 						variant='primary'
 						className='px-5 py-2.5 text-xs uppercase tracking-wider'
 						type='button'
+						asChild
 					>
-						Book a Consultation
+						<a href='/consultation-categories'>Book a Consultation</a>
 					</Button>
 				</div>
 
