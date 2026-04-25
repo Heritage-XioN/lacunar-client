@@ -1,5 +1,10 @@
 export function ConsultationFooter() {
-	const links = ['Privacy Policy', 'Terms of Engagement', 'Global Offices', 'Expertise'];
+	const links = [
+		'Privacy Policy',
+		'Terms of Engagement',
+		'Global Offices',
+		'Expertise',
+	];
 
 	return (
 		<footer className='border-t border-slate-200 bg-white'>
@@ -8,10 +13,10 @@ export function ConsultationFooter() {
 					{/* Left — Brand */}
 					<div>
 						<p className='text-xl italic text-navy-900'>
-							Vantage Strategy
+							Lacunar Consulting Firm
 						</p>
 						<p className='mt-3 text-xs font-semibold uppercase tracking-widest text-slate-400'>
-							© 2024 Architectural Strategy. All rights reserved.
+							© 2024 Lacunar Consulting Firm. All rights reserved.
 						</p>
 						<p className='mt-1 text-xs font-semibold uppercase tracking-widest text-slate-400'>
 							Cultivating the Informed Authority

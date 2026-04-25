@@ -29,25 +29,30 @@ export function Hero() {
 
 					{/* Heading */}
 					<h1 className='text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl'>
-						<em className='font-normal italic text-gold-300'>Purpose </em>{' '}
-						and innovation.
+						<em className='font-normal italic text-gold-300'>Purpose </em> and
+						innovation.
 					</h1>
 
 					{/* Subtitle */}
 					<p className='max-w-lg text-base leading-relaxed text-slate-300 sm:text-lg'>
-						We exists to bridge structural gaps in African startups, using innovative, system-driven solutions to build scalable, high-impact businesses.
+						We exists to bridge structural gaps in African startups, using
+						innovative, system-driven solutions to build scalable, high-impact
+						businesses.
 					</p>
 
 					{/* CTAs */}
-					<div className='flex flex-col gap-4 pt-2 sm:flex-row'>
+					<div className='flex flex-col gap-4 pt-2 sm:flex-row '>
 						<Button
 							variant='primary'
-							className='px-7 py-3 text-sm'
+							className='px-5 py-2.5 text-xs uppercase tracking-wider'
 							type='button'
+							asChild
 						>
-							Get Started
-							<ArrowRight className='ml-2 h-4 w-4' />
+							<a href='/consultation-categories'>
+								Book a Consultation <ArrowRight className='ml-2 h-4 w-4' />
+							</a>
 						</Button>
+
 						<Button
 							variant='outline'
 							className='px-7 py-3 text-sm'

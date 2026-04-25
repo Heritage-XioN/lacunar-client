@@ -6,14 +6,14 @@ import { BusinessConsultingForm } from '@/components/block/consultation-form/bus
 
 export function ConsultationFormTemplate({ slug }: { slug: string }) {
 	switch (slug) {
-		case 'sustaining-family-wealth':
-			return <SustainingFamilyWealthForm />;
-		case 'government-ngo-consulting':
-			return <GovernmentNgoForm />;
 		case 'personal-finance':
 			return <PersonalFinanceForm />;
 		case 'business-consulting':
 			return <BusinessConsultingForm />;
+		case 'sustaining-family-wealth':
+			return <SustainingFamilyWealthForm />;
+		case 'government-ngo-consulting':
+			return <GovernmentNgoForm />;
 		case 'lacunar-business-model':
 		case 'investment-and-capital-advisory':
 		default:

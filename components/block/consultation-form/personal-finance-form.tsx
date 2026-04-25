@@ -1,5 +1,5 @@
 'use client';
-
+import { toast } from 'sonner';
 import { useForm } from '@tanstack/react-form';
 import z from 'zod';
 import { Button } from '@/components/ui/button';
@@ -7,20 +7,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
 const personalFinanceSchema = z.object({
-	primaryCatalyst: z.array(z.string()).min(1, 'Select at least one catalyst'),
-	financialStress: z.array(z.number()),
+	primaryCatalyst: z.string(),
+	financialStress: z.string(),
 	monthlyNetIncome: z.number().min(0, 'Must be positive').optional(),
 	incomeCurrency: z.string(),
 	monthlyCoreExpenses: z.number().min(0, 'Must be positive').optional(),
@@ -32,21 +24,23 @@ const personalFinanceSchema = z.object({
 	vision730Day: z.string().optional(),
 	desiredOutcomes: z
 		.array(z.string())
-		.min(2, 'Select exactly 2 outcomes')
-		.max(2, 'Select exactly 2 outcomes'),
+		.min(3, 'Select exactly 3 outcomes')
+		.max(3, 'Select exactly 3 outcomes'),
 	operationalObstacle: z.string().min(1, 'Select a primary obstacle'),
 	decisionConfidence: z.string().min(1, 'Select your confidence index'),
 	successDefinition: z.string().min(1, 'Please define success'),
-	legalName: z.string().min(1, 'Full name is required'),
-	secureEmail: z.string().email('Invalid email address'),
-	directContact: z.string().optional(),
+	fullName: z.string().min(1, 'Full name is required'),
+	email: z.string().email('Invalid email address'),
+	phoneNumber: z.string().optional(),
 });
+
+import { submitConsultationForm } from '@/actions/consultation';
 
 export function PersonalFinanceForm() {
 	const form = useForm({
 		defaultValues: {
-			primaryCatalyst: [] as string[],
-			financialStress: [5],
+			primaryCatalyst: '',
+			financialStress: '',
 			monthlyNetIncome: undefined as number | undefined,
 			incomeCurrency: 'USD',
 			monthlyCoreExpenses: undefined as number | undefined,
@@ -60,45 +54,23 @@ export function PersonalFinanceForm() {
 			operationalObstacle: '',
 			decisionConfidence: '',
 			successDefinition: '',
-			legalName: '',
-			secureEmail: '',
-			directContact: '',
+			fullName: '',
+			email: '',
+			phoneNumber: '',
 		},
 		onSubmit: async ({ value }) => {
-			console.log('Form submitted:', value);
-			alert('Personal Finance Intake Submitted! Check console for data.');
+			const result = await submitConsultationForm('personal-finance', value);
+			if (result.success) {
+				toast.success('form submitted successfully!');
+				form.reset();
+			} else {
+				toast.error(`form submitted failed: ${result.error}`);
+			}
 		},
 	});
 
 	return (
 		<div className='min-h-screen bg-[#F8F9FA] font-sans text-navy-900 pb-32'>
-			{/* Top Nav (Optional/Inline) */}
-			<header className='flex items-center justify-between px-6 py-6 md:px-12'>
-				<div className='font-serif text-xl font-bold tracking-tight'>
-					StratEdge Consulting
-				</div>
-				<div className='hidden items-center gap-8 text-sm text-slate-500 md:flex'>
-					<a href='#' className='hover:text-navy-900'>
-						Our Strategy
-					</a>
-					<a href='#' className='hover:text-navy-900'>
-						Case Studies
-					</a>
-					<a href='#' className='hover:text-navy-900'>
-						Intelligence
-					</a>
-					<a
-						href='#'
-						className='hover:text-navy-900 uppercase text-[10px] tracking-widest'
-					>
-						Connect With
-					</a>
-					<Button className='bg-navy-900 px-6 py-2 text-[10px] uppercase tracking-widest text-white hover:bg-navy-800 rounded-none'>
-						Schedule Consultation
-					</Button>
-				</div>
-			</header>
-
 			<div className='mx-auto max-w-4xl px-4 pt-16 sm:px-6 lg:px-8'>
 				{/* Form Header */}
 				<div className='mb-24 text-center'>
@@ -139,9 +111,6 @@ export function PersonalFinanceForm() {
 						<div className='bg-slate-50 border border-slate-100 p-8 md:col-span-8 space-y-12 shadow-sm'>
 							<form.Field
 								name='primaryCatalyst'
-								validators={{
-									onChange: personalFinanceSchema.shape.primaryCatalyst,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -159,35 +128,32 @@ export function PersonalFinanceForm() {
 											<FieldLabel className='text-xs font-serif text-navy-900'>
 												Primary Catalyst for Consultation
 											</FieldLabel>
-											<div className='flex flex-col gap-4'>
+											<RadioGroup
+												name={field.name}
+												value={field.state.value}
+												className='flex flex-col gap-4'
+												onValueChange={field.handleChange}
+											>
 												{options.map((opt) => (
 													<label
 														key={opt}
 														className='flex cursor-pointer items-center gap-3'
 													>
-														<Checkbox
-															checked={field.state.value.includes(opt)}
-															onCheckedChange={(checked) => {
-																if (checked) {
-																	field.handleChange([
-																		...field.state.value,
-																		opt,
-																	]);
-																} else {
-																	field.handleChange(
-																		field.state.value.filter(
-																			(val) => val !== opt,
-																		),
-																	);
-																}
-															}}
+														<RadioGroupItem
+															value={opt}
+															id={opt}
+															aria-invalid={isInvalid}
 														/>
-														<span className='text-sm text-slate-600'>
+
+														<label
+															htmlFor={opt}
+															className='text-sm text-slate-600'
+														>
 															{opt}
-														</span>
+														</label>
 													</label>
 												))}
-											</div>
+											</RadioGroup>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
 											)}
@@ -199,27 +165,53 @@ export function PersonalFinanceForm() {
 							<form.Field
 								name='financialStress'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									const options = [
+										'None – I feel completely in control',
+										'Mild – occasional worry but manageable``',
+										'Moderate – frequent worry that affects my mood`',
+										'High – it keeps me up at night or causes arguments',
+										'Overwhelming – I feel paralysed or avoid thinking about it',
+									];
 									return (
-										<Field className='flex flex-col gap-6 pt-4'>
-											<div className='flex items-center justify-between'>
-												<FieldLabel className='text-xs font-serif text-navy-900'>
-													Internal Financial Stress Level
-												</FieldLabel>
-											</div>
-											<div className='px-2'>
-												<Slider
-													value={field.state.value}
-													onValueChange={field.handleChange}
-													max={10}
-													min={1}
-													step={1}
-													className='py-4'
-												/>
-												<div className='flex justify-between text-[10px] uppercase tracking-widest text-slate-400'>
-													<span>Serene</span>
-													<span>Acute</span>
-												</div>
-											</div>
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-4'
+										>
+											<FieldLabel className='text-xs font-serif text-navy-900'>
+												How would you rate your current level of financial
+												stress?
+											</FieldLabel>
+											<RadioGroup
+												name={field.name}
+												value={field.state.value}
+												className='flex flex-col gap-4'
+												onValueChange={field.handleChange}
+											>
+												{options.map((opt) => (
+													<label
+														key={opt}
+														className='flex cursor-pointer items-center gap-3'
+													>
+														<RadioGroupItem
+															value={opt}
+															id={opt}
+															aria-invalid={isInvalid}
+														/>
+
+														<label
+															htmlFor={opt}
+															className='text-sm text-slate-600'
+														>
+															{opt}
+														</label>
+													</label>
+												))}
+											</RadioGroup>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -251,7 +243,6 @@ export function PersonalFinanceForm() {
 													Monthly Net Income
 												</FieldLabel>
 												<div className='flex items-center gap-2 border-b border-slate-300 pb-2'>
-													<span className='text-lg text-slate-500'>$</span>
 													<input
 														type='number'
 														value={field.state.value || ''}
@@ -276,6 +267,7 @@ export function PersonalFinanceForm() {
 																}
 																className='bg-transparent text-xs text-slate-500 focus:outline-none'
 															>
+																<option value='NGN'>NGN</option>
 																<option value='USD'>USD</option>
 																<option value='EUR'>EUR</option>
 																<option value='GBP'>GBP</option>
@@ -296,7 +288,6 @@ export function PersonalFinanceForm() {
 													Monthly Core Expenses
 												</FieldLabel>
 												<div className='flex items-center gap-2 border-b border-slate-300 pb-2'>
-													<span className='text-lg text-slate-500'>$</span>
 													<input
 														type='number'
 														value={field.state.value || ''}
@@ -392,6 +383,13 @@ export function PersonalFinanceForm() {
 											'REAL ESTATE',
 											'BROKERAGE',
 											'RETIREMENT',
+											'CRYPTO',
+											'BUSINESS ASSETS',
+											'BUSINESS EQUITY',
+											'FIXED DEPOSIT',
+											'SAVINGS ACCOUNT',
+											'CHECKING ACCOUNT',
+											'CURRENT ACCOUNT',
 										];
 										return (
 											<Field className='flex flex-col gap-4'>
@@ -399,37 +397,33 @@ export function PersonalFinanceForm() {
 													Active Assets
 												</FieldLabel>
 												<div className='flex flex-wrap gap-3'>
-													{options.map((opt) => {
-														const isSelected = field.state.value.includes(opt);
-														return (
-															<button
-																type='button'
-																key={opt}
-																onClick={() => {
-																	if (isSelected) {
+													{options.map((opt) => (
+														<label
+															key={opt}
+															className='flex cursor-pointer items-center gap-3 bg-white px-4 py-3 border border-slate-100 shadow-sm transition-colors hover:border-slate-300'
+														>
+															<Checkbox
+																checked={field.state.value.includes(opt)}
+																onCheckedChange={(checked) => {
+																	if (checked) {
+																		field.handleChange([
+																			...field.state.value,
+																			opt,
+																		]);
+																	} else {
 																		field.handleChange(
 																			field.state.value.filter(
 																				(val) => val !== opt,
 																			),
 																		);
-																	} else {
-																		field.handleChange([
-																			...field.state.value,
-																			opt,
-																		]);
 																	}
 																}}
-																className={cn(
-																	'px-4 py-2 text-[10px] font-semibold tracking-widest transition-colors',
-																	isSelected
-																		? 'bg-slate-200 text-navy-900'
-																		: 'bg-slate-50 text-slate-500 hover:bg-slate-100',
-																)}
-															>
+															/>
+															<span className='text-xs text-slate-600'>
 																{opt}
-															</button>
-														);
-													})}
+															</span>
+														</label>
+													))}
 												</div>
 											</Field>
 										);
@@ -440,10 +434,14 @@ export function PersonalFinanceForm() {
 									name='debtProfile'
 									children={(field) => {
 										const options = [
-											'Consumer Credit',
-											'Student Obligations',
+											'Credit card debt',
+											'Student loans',
 											'Mortgage',
-											'Business Debt',
+											'Auto loan',
+											'Personal loan / line of credit',
+											'Medical debt',
+											'Business debt',
+											'None',
 										];
 										return (
 											<Field className='flex flex-col gap-4'>
@@ -602,6 +600,11 @@ export function PersonalFinanceForm() {
 										'Optimization of Tax Liabilities',
 										'Aggressive Growth Trajectory',
 										'Stability & Risk Mitigation',
+										'Eliminating all high-interest debt',
+										'Fully funding my children’s education',
+										'Building a 6-12 month emergency fund',
+										'Feeling in control day-to-day',
+										'Leaving a financial legacy',
 									];
 									return (
 										<Field
@@ -624,7 +627,7 @@ export function PersonalFinanceForm() {
 															checked={field.state.value.includes(opt)}
 															onCheckedChange={(checked) => {
 																if (checked) {
-																	if (field.state.value.length < 2) {
+																	if (field.state.value.length < 3) {
 																		field.handleChange([
 																			...field.state.value,
 																			opt,
@@ -640,7 +643,7 @@ export function PersonalFinanceForm() {
 															}}
 															disabled={
 																!field.state.value.includes(opt) &&
-																field.state.value.length >= 2
+																field.state.value.length >= 3
 															}
 															className='h-5 w-5 border-slate-300 data-[state=checked]:bg-white data-[state=checked]:text-navy-900'
 														/>
@@ -675,9 +678,6 @@ export function PersonalFinanceForm() {
 							<div className='bg-slate-50 border border-slate-100 p-8 shadow-sm'>
 								<form.Field
 									name='operationalObstacle'
-									validators={{
-										onChange: personalFinanceSchema.shape.operationalObstacle,
-									}}
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;
@@ -745,9 +745,6 @@ export function PersonalFinanceForm() {
 
 							<form.Field
 								name='decisionConfidence'
-								validators={{
-									onChange: personalFinanceSchema.shape.decisionConfidence,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -790,7 +787,7 @@ export function PersonalFinanceForm() {
 								}}
 							/>
 
-							<div className='bg-[#2A2311] p-8 md:p-10 text-white'>
+							<div className='bg-[#2A2311] p-8 md:p-10'>
 								<form.Field
 									name='successDefinition'
 									validators={{
@@ -818,7 +815,7 @@ export function PersonalFinanceForm() {
 													onBlur={field.handleBlur}
 													placeholder='Quantify your success metric...'
 													className={cn(
-														'mt-2 min-h-[100px] resize-none border bg-[#1E180B] text-sm text-white placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-gold-500',
+														'mt-2 min-h-[100px] resize-none text-white border text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-gold-500 px-1',
 														isInvalid ? 'border-red-400' : 'border-[#3D331D]',
 													)}
 												/>
@@ -834,55 +831,22 @@ export function PersonalFinanceForm() {
 					</section>
 
 					{/* PHASE 06 */}
-					<section className='grid gap-8 md:grid-cols-12'>
+					<section className='grid gap-8 md:grid-cols-12 w-full'>
 						<div className='md:col-span-4'>
 							<p className='text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-500'>
 								Phase 06
 							</p>
 							<h2 className='mt-2 font-serif text-2xl text-navy-900'>
-								Authentication
+								Contact Information
 							</h2>
 							<p className='mt-4 text-xs text-slate-500'>
 								Finalize your dossier for consultation.
 							</p>
 						</div>
-						<div className='md:col-span-8'>
-							<div className='grid gap-8 sm:grid-cols-2'>
+						<section className='mx-auto max-w-2xl pb-32 text-center md:col-span-8'>
+							<div className='mt-12 grid gap-8 sm:grid-cols-2 text-left'>
 								<form.Field
-									name='legalName'
-									validators={{
-										onChange: personalFinanceSchema.shape.legalName,
-									}}
-									children={(field) => {
-										const isInvalid =
-											field.state.meta.isTouched && !field.state.meta.isValid;
-										return (
-											<Field
-												data-invalid={isInvalid}
-												className='flex flex-col gap-1.5 sm:col-span-2'
-											>
-												<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
-													Legal Full Name
-												</FieldLabel>
-												<input
-													type='text'
-													value={field.state.value}
-													onChange={(e) => field.handleChange(e.target.value)}
-													onBlur={field.handleBlur}
-													className='border border-slate-200 bg-white px-4 py-3 text-sm text-navy-900 focus:border-navy-900 focus:outline-none'
-												/>
-												{isInvalid && (
-													<FieldError errors={field.state.meta.errors} />
-												)}
-											</Field>
-										);
-									}}
-								/>
-								<form.Field
-									name='secureEmail'
-									validators={{
-										onChange: personalFinanceSchema.shape.secureEmail,
-									}}
+									name='fullName'
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;
@@ -891,15 +855,15 @@ export function PersonalFinanceForm() {
 												data-invalid={isInvalid}
 												className='flex flex-col gap-1.5'
 											>
-												<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
-													Secure Email
+												<FieldLabel className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500'>
+													Full Name
 												</FieldLabel>
 												<input
-													type='email'
+													type='text'
 													value={field.state.value}
 													onChange={(e) => field.handleChange(e.target.value)}
 													onBlur={field.handleBlur}
-													className='border border-slate-200 bg-white px-4 py-3 text-sm text-navy-900 focus:border-navy-900 focus:outline-none'
+													className='border-b border-slate-300 bg-transparent pb-2 pt-2 text-sm text-navy-900 placeholder:text-slate-400 focus:border-navy-900 focus:outline-none'
 												/>
 												{isInvalid && (
 													<FieldError errors={field.state.meta.errors} />
@@ -909,46 +873,80 @@ export function PersonalFinanceForm() {
 									}}
 								/>
 								<form.Field
-									name='directContact'
+									name='email'
 									children={(field) => {
+										const isInvalid =
+											field.state.meta.isTouched && !field.state.meta.isValid;
 										return (
-											<Field className='flex flex-col gap-1.5'>
-												<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
-													Direct Contact
+											<Field
+												data-invalid={isInvalid}
+												className='flex flex-col gap-1.5'
+											>
+												<FieldLabel className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500'>
+													Email Address
+												</FieldLabel>
+												<input
+													type='email'
+													value={field.state.value}
+													onChange={(e) => field.handleChange(e.target.value)}
+													onBlur={field.handleBlur}
+													className='border-b border-slate-300 bg-transparent pb-2 pt-2 text-sm text-navy-900 placeholder:text-slate-400 focus:border-navy-900 focus:outline-none'
+												/>
+												{isInvalid && (
+													<FieldError errors={field.state.meta.errors} />
+												)}
+											</Field>
+										);
+									}}
+								/>
+								<form.Field
+									name='phoneNumber'
+									children={(field) => {
+										const isInvalid =
+											field.state.meta.isTouched && !field.state.meta.isValid;
+										return (
+											<Field
+												data-invalid={isInvalid}
+												className='flex flex-col gap-1.5 sm:col-span-2'
+											>
+												<FieldLabel className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500'>
+													Phone Number
 												</FieldLabel>
 												<input
 													type='tel'
 													value={field.state.value}
 													onChange={(e) => field.handleChange(e.target.value)}
 													onBlur={field.handleBlur}
-													className='border border-slate-200 bg-white px-4 py-3 text-sm text-navy-900 focus:border-navy-900 focus:outline-none'
+													className='border-b border-slate-300 bg-transparent pb-2 pt-2 text-sm text-navy-900 placeholder:text-slate-400 focus:border-navy-900 focus:outline-none'
 												/>
+												{isInvalid && (
+													<FieldError errors={field.state.meta.errors} />
+												)}
 											</Field>
 										);
 									}}
 								/>
 							</div>
 
-							<div className='flex flex-col items-center pt-16'>
+							<div className='mt-16'>
 								<form.Subscribe
 									selector={(state) => [state.canSubmit, state.isSubmitting]}
 									children={([canSubmit, isSubmitting]) => (
 										<Button
 											type='submit'
 											disabled={!canSubmit}
-											className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-navy-800'
+											className='w-full sm:w-auto min-w-[240px] bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800'
 										>
-											{isSubmitting ? 'Submitting...' : 'Submit Intake Dossier'}
+											{isSubmitting ? 'Submitting...' : 'Submit'}
 										</Button>
 									)}
 								/>
-								<p className='mt-4 flex items-center gap-2 text-[9px] text-slate-400'>
-									<span className='h-2 w-2 rounded-full bg-navy-900' />
-									Encrypted transmission for the security of your privacy and
-									financial architecture.
+								<p className='mt-6 text-[9px] uppercase tracking-widest text-slate-400'>
+									By submitting, you agree to our Terms of Service & Privacy
+									Policy.
 								</p>
 							</div>
-						</div>
+						</section>
 					</section>
 				</form>
 			</div>

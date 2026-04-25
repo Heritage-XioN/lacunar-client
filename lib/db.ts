@@ -1,10 +1,24 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import * as schema from './schema';
 
-const client = new Client({
-	connectionString: process.env.DATABASE_URL,
-});
+/**
+ * Database connection management for Next.js
+ * Uses a global variable to prevent multiple connections during HMR
+ */
 
-await client.connect();
-export const db = drizzle(client, { schema });
+const globalForDb = global as unknown as {
+	pool: Pool | undefined;
+};
+
+const pool =
+	globalForDb.pool ??
+	new Pool({
+		connectionString: process.env.DATABASE_URL,
+	});
+
+if (process.env.NODE_ENV !== 'production') {
+	globalForDb.pool = pool;
+}
+
+export const db = drizzle(pool, { schema });

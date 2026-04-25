@@ -7,7 +7,6 @@ import { CategoriesCta } from '../block/consultation-categories/categories-cta';
 export function ConsultationCategoriesPage() {
 	return (
 		<div className='min-h-screen bg-slate-50'>
-			{/* <ConsultationNavbar /> */}
 			<main>
 				<CategoriesHeader />
 				<CategoriesGrid />

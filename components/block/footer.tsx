@@ -60,7 +60,8 @@ export function Footer() {
 				{/* Copyright bar */}
 				<div className='mt-14 border-t border-slate-800 pt-8'>
 					<p className='text-xs text-slate-600'>
-						© 2024 VANTAGE STRATEGY. All rights reserved. Crafted with architectural precision.
+						© 2026 LACUNAR CONSULTING FIRM. All rights reserved. Crafted with
+						INSTITUTIONAL precision.
 					</p>
 				</div>
 			</div>

@@ -5,6 +5,7 @@ import {
 	varchar,
 	timestamp,
 	jsonb,
+	integer,
 } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
@@ -16,9 +17,9 @@ export const users = pgTable('users', {
 
 export const consultation_sessions = pgTable('consultation_sessions', {
 	id: serial('id').primaryKey(),
-	userId: serial('user_id').references(() => users.id),
+	userId: integer('user_id').references(() => users.id),
 	category: varchar('category', { length: 256 }).notNull(),
-	status: varchar('status', { length: 256 }).notNull(),
+	status: varchar('status', { length: 256 }).notNull().default('pending'),
 	onBoardingDetails: jsonb('onBoarding_details').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow(),

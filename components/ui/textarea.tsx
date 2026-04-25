@@ -9,7 +9,7 @@ export function Textarea({ label, className = '', ...props }: TextareaProps) {
 				{label}
 			</label>
 			<textarea
-				className='mt-2 resize-none border-b border-slate-200 bg-transparent pb-3 text-sm text-navy-900 placeholder:text-slate-300 focus:border-navy-900 focus:outline-none transition-colors font-[family-name:var(--font-body)]'
+				className='mt-2 resize-none border-b border-slate-200 bg-transparent pb-3 text-sm placeholder:text-slate-300 focus:border-navy-900 focus:outline-none transition-colors font-[family-name:var(--font-body)]'
 				rows={3}
 				{...props}
 			/>
