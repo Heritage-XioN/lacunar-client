@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { users, consultation_sessions } from '@/lib/schema';
+import { users, consultation_sessions } from '@/lib/db-schema';
 import { eq } from 'drizzle-orm';
 
 /**
@@ -12,7 +12,8 @@ export async function submitConsultationForm(category: string, formData: any) {
 	try {
 		// 1. Extract basic user info from form data
 		// Different forms use different field names, so we try a few common ones
-		const email = formData.emailAddress || formData.secureEmail || formData.email;
+		const email =
+			formData.emailAddress || formData.secureEmail || formData.email;
 		const fullName = formData.fullName || formData.legalName || formData.name;
 
 		if (!email) {
@@ -56,7 +57,10 @@ export async function submitConsultationForm(category: string, formData: any) {
 		console.error('Consultation Submission Error:', error);
 		return {
 			success: false,
-			error: error instanceof Error ? error.message : 'An unexpected error occurred.',
+			error:
+				error instanceof Error
+					? error.message
+					: 'An unexpected error occurred.',
 		};
 	}
 }

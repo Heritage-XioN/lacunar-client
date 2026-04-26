@@ -1,40 +1,15 @@
 'use client';
+
 import { toast } from 'sonner';
 import { useForm } from '@tanstack/react-form';
-import z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Slider } from '@/components/ui/slider';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-
-const personalFinanceSchema = z.object({
-	primaryCatalyst: z.string(),
-	financialStress: z.string(),
-	monthlyNetIncome: z.number().min(0, 'Must be positive').optional(),
-	incomeCurrency: z.string(),
-	monthlyCoreExpenses: z.number().min(0, 'Must be positive').optional(),
-	trackingMethodologies: z.array(z.string()),
-	activeAssets: z.array(z.string()),
-	debtProfile: z.array(z.string()),
-	financialReality: z.string().optional(),
-	timeHorizon: z.string().min(1, 'Select a time horizon'),
-	vision730Day: z.string().optional(),
-	desiredOutcomes: z
-		.array(z.string())
-		.min(3, 'Select exactly 3 outcomes')
-		.max(3, 'Select exactly 3 outcomes'),
-	operationalObstacle: z.string().min(1, 'Select a primary obstacle'),
-	decisionConfidence: z.string().min(1, 'Select your confidence index'),
-	successDefinition: z.string().min(1, 'Please define success'),
-	fullName: z.string().min(1, 'Full name is required'),
-	email: z.string().email('Invalid email address'),
-	phoneNumber: z.string().optional(),
-});
-
 import { submitConsultationForm } from '@/actions/consultation';
+import { personalFinanceSchema } from '@/lib/zod-schemas';
 
 export function PersonalFinanceForm() {
 	const form = useForm({
@@ -42,7 +17,7 @@ export function PersonalFinanceForm() {
 			primaryCatalyst: '',
 			financialStress: '',
 			monthlyNetIncome: undefined as number | undefined,
-			incomeCurrency: 'USD',
+			incomeCurrency: 'NGN',
 			monthlyCoreExpenses: undefined as number | undefined,
 			trackingMethodologies: [] as string[],
 			activeAssets: [] as string[],
@@ -57,6 +32,10 @@ export function PersonalFinanceForm() {
 			fullName: '',
 			email: '',
 			phoneNumber: '',
+		},
+		validators: {
+			onSubmit: personalFinanceSchema,
+			onBlur: personalFinanceSchema,
 		},
 		onSubmit: async ({ value }) => {
 			const result = await submitConsultationForm('personal-finance', value);
@@ -237,6 +216,8 @@ export function PersonalFinanceForm() {
 								<form.Field
 									name='monthlyNetIncome'
 									children={(field) => {
+										const isInvalid =
+											field.state.meta.isTouched && !field.state.meta.isValid;
 										return (
 											<Field className='flex flex-col gap-1.5'>
 												<FieldLabel className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400'>
@@ -275,6 +256,9 @@ export function PersonalFinanceForm() {
 														)}
 													/>
 												</div>
+												{isInvalid && (
+													<FieldError errors={field.state.meta.errors} />
+												)}
 											</Field>
 										);
 									}}
@@ -282,6 +266,8 @@ export function PersonalFinanceForm() {
 								<form.Field
 									name='monthlyCoreExpenses'
 									children={(field) => {
+										const isInvalid =
+											field.state.meta.isTouched && !field.state.meta.isValid;
 										return (
 											<Field className='flex flex-col gap-1.5'>
 												<FieldLabel className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400'>
@@ -303,6 +289,9 @@ export function PersonalFinanceForm() {
 														className='w-full bg-transparent text-lg text-navy-900 placeholder:text-slate-300 focus:outline-none'
 													/>
 												</div>
+												{isInvalid && (
+													<FieldError errors={field.state.meta.errors} />
+												)}
 											</Field>
 										);
 									}}
@@ -312,6 +301,8 @@ export function PersonalFinanceForm() {
 							<form.Field
 								name='trackingMethodologies'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									const options = [
 										'Advanced Spreadsheets',
 										'Digital Applications',
@@ -352,6 +343,9 @@ export function PersonalFinanceForm() {
 													</label>
 												))}
 											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -378,6 +372,8 @@ export function PersonalFinanceForm() {
 								<form.Field
 									name='activeAssets'
 									children={(field) => {
+										const isInvalid =
+											field.state.meta.isTouched && !field.state.meta.isValid;
 										const options = [
 											'LIQUID SAVINGS',
 											'REAL ESTATE',
@@ -425,6 +421,9 @@ export function PersonalFinanceForm() {
 														</label>
 													))}
 												</div>
+												{isInvalid && (
+													<FieldError errors={field.state.meta.errors} />
+												)}
 											</Field>
 										);
 									}}
@@ -433,6 +432,8 @@ export function PersonalFinanceForm() {
 								<form.Field
 									name='debtProfile'
 									children={(field) => {
+										const isInvalid =
+											field.state.meta.isTouched && !field.state.meta.isValid;
 										const options = [
 											'Credit card debt',
 											'Student loans',
@@ -477,6 +478,9 @@ export function PersonalFinanceForm() {
 														</label>
 													))}
 												</div>
+												{isInvalid && (
+													<FieldError errors={field.state.meta.errors} />
+												)}
 											</Field>
 										);
 									}}
@@ -486,6 +490,8 @@ export function PersonalFinanceForm() {
 							<form.Field
 								name='financialReality'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-xs font-serif text-navy-900'>
@@ -499,6 +505,9 @@ export function PersonalFinanceForm() {
 												placeholder='Describe the current narrative of your finances...'
 												className='min-h-[120px] resize-none border-none bg-slate-100 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -523,9 +532,6 @@ export function PersonalFinanceForm() {
 						<div className='md:col-span-8 space-y-12'>
 							<form.Field
 								name='timeHorizon'
-								validators={{
-									onChange: personalFinanceSchema.shape.timeHorizon,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -569,6 +575,8 @@ export function PersonalFinanceForm() {
 							<form.Field
 								name='vision730Day'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-xs font-serif text-navy-900'>
@@ -582,6 +590,9 @@ export function PersonalFinanceForm() {
 												placeholder='Where does this path lead in 24 months if perfectly executed?'
 												className='min-h-[100px] resize-none border-none bg-slate-100 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -589,9 +600,6 @@ export function PersonalFinanceForm() {
 
 							<form.Field
 								name='desiredOutcomes'
-								validators={{
-									onChange: personalFinanceSchema.shape.desiredOutcomes,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -790,9 +798,6 @@ export function PersonalFinanceForm() {
 							<div className='bg-[#2A2311] p-8 md:p-10'>
 								<form.Field
 									name='successDefinition'
-									validators={{
-										onChange: personalFinanceSchema.shape.successDefinition,
-									}}
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;
@@ -935,7 +940,7 @@ export function PersonalFinanceForm() {
 										<Button
 											type='submit'
 											disabled={!canSubmit}
-											className='w-full sm:w-auto min-w-[240px] bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800'
+											className='w-full sm:w-auto min-w-[240px] bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
 										>
 											{isSubmitting ? 'Submitting...' : 'Submit'}
 										</Button>

@@ -1,83 +1,52 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useForm } from '@tanstack/react-form';
-import z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-
-const sustainingFamilyWealthSchema = z.object({
-	governanceStructure: z.string().min(1, 'Select a governance structure'),
-	familyOpenness: z.string().min(1, 'Select a value on the scale'),
-	primaryObjectives: z
-		.array(z.string())
-		.min(1, 'Select at least one objective'),
-	qualitativeVision: z.string().optional(),
-	currentObstacles: z.string().optional(),
-	successMetric: z.string().min(1, 'Success metric is mandatory'),
-	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.string().email('Invalid email address'),
-	preferredTime: z.string().min(1, 'Select a preferred time'),
-});
+import { submitConsultationForm } from '@/actions/consultation';
+import { sustainingFamilyWealthSchema } from '@/lib/zod-schemas';
 
 export function SustainingFamilyWealthForm() {
 	const form = useForm({
 		defaultValues: {
 			governanceStructure: '',
 			familyOpenness: '',
+			familyAssets: [] as string[],
 			primaryObjectives: [] as string[],
 			qualitativeVision: '',
 			currentObstacles: '',
 			successMetric: '',
 			fullName: '',
 			emailAddress: '',
-			preferredTime: '',
+			phoneNumber: '',
 		},
+
+		validators: {
+			onSubmit: sustainingFamilyWealthSchema,
+			onBlur: sustainingFamilyWealthSchema,
+		},
+
 		onSubmit: async ({ value }) => {
-			console.log('Form submitted:', value);
-			alert(
-				'Sustaining Family Wealth Intake Submitted! Check console for data.',
+			const result = await submitConsultationForm(
+				'sustaining-family-wealth',
+				value,
 			);
+			if (result.success) {
+				toast.success('Family Wealth Intake Submitted Successfully!');
+				form.reset();
+			} else {
+				toast.error(`Submission Failed: ${result.error}`);
+			}
 		},
 	});
 
 	return (
 		<div className='min-h-screen bg-slate-50 font-sans text-navy-900 pb-32'>
-			{/* Top Nav (Optional/Inline) */}
-			<header className='flex items-center justify-between px-6 py-6 md:px-12'>
-				<div className='font-serif text-xl font-bold tracking-tight'>
-					Sustaining Family Wealth
-				</div>
-				<div className='hidden items-center gap-8 text-sm text-slate-500 md:flex'>
-					<a href='#governance' className='hover:text-navy-900'>
-						Governance
-					</a>
-					<a href='#goals' className='hover:text-navy-900'>
-						Goals
-					</a>
-					<a href='#constraints' className='hover:text-navy-900'>
-						Constraints
-					</a>
-					<a href='#success' className='hover:text-navy-900'>
-						Success
-					</a>
-					<Button className='bg-navy-900 px-6 py-2 text-xs uppercase tracking-widest text-white hover:bg-navy-800 rounded-none'>
-						Contact Advisor
-					</Button>
-				</div>
-			</header>
-
 			<div className='mx-auto max-w-3xl px-4 pt-16 sm:px-6 lg:px-8'>
 				{/* Form Header */}
 				<div className='mb-16 text-center'>
@@ -120,10 +89,6 @@ export function SustainingFamilyWealthForm() {
 
 							<form.Field
 								name='governanceStructure'
-								validators={{
-									onChange:
-										sustainingFamilyWealthSchema.shape.governanceStructure,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -173,9 +138,6 @@ export function SustainingFamilyWealthForm() {
 
 							<form.Field
 								name='familyOpenness'
-								validators={{
-									onChange: sustainingFamilyWealthSchema.shape.familyOpenness,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -200,7 +162,7 @@ export function SustainingFamilyWealthForm() {
 												<RadioGroup
 													value={field.state.value}
 													onValueChange={field.handleChange}
-													className='flex gap-4'
+													className='flex justify-around gap-4'
 												>
 													{['1', '2', '3', '4', '5'].map((val) => (
 														<div key={val} className='flex items-center'>
@@ -215,6 +177,67 @@ export function SustainingFamilyWealthForm() {
 												<span className='text-[10px] uppercase tracking-widest text-slate-400'>
 													Open
 												</span>
+											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+
+							<form.Field
+								name='primaryObjectives'
+								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
+									const options = [
+										'Operating business(es)',
+										'Real estate (residential, commercial, agricultural)',
+										'Investment portfolio (stocks, bonds, funds)',
+										'Trust or foundations',
+										'Intellectual property or royalties',
+										'International assets across multiple jurisdictions',
+										'Art, collectibles, or other hard assets',
+										'Family bank accounts or other cas reserves',
+									];
+									return (
+										<Field
+											data-invalid={isInvalid}
+											className='flex flex-col gap-4'
+										>
+											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
+												What assets or entities are currently part of the family
+												wealth picture
+											</FieldLabel>
+											<div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+												{options.map((opt) => (
+													<label
+														key={opt}
+														className='flex cursor-pointer items-center gap-3'
+													>
+														<Checkbox
+															checked={field.state.value.includes(opt)}
+															onCheckedChange={(checked) => {
+																if (checked) {
+																	field.handleChange([
+																		...field.state.value,
+																		opt,
+																	]);
+																} else {
+																	field.handleChange(
+																		field.state.value.filter(
+																			(val) => val !== opt,
+																		),
+																	);
+																}
+															}}
+														/>
+														<span className='text-sm text-slate-600'>
+															{opt}
+														</span>
+													</label>
+												))}
 											</div>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -239,10 +262,6 @@ export function SustainingFamilyWealthForm() {
 
 							<form.Field
 								name='primaryObjectives'
-								validators={{
-									onChange:
-										sustainingFamilyWealthSchema.shape.primaryObjectives,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -300,6 +319,8 @@ export function SustainingFamilyWealthForm() {
 							<form.Field
 								name='qualitativeVision'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
@@ -313,18 +334,13 @@ export function SustainingFamilyWealthForm() {
 												placeholder='Describe the desired legacy in your own words...'
 												className='min-h-[120px] resize-none border-none bg-slate-50 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
 							/>
-						</section>
-
-						{/* Image Interstitial */}
-						<section className='relative h-64 overflow-hidden bg-slate-200'>
-							<div className='absolute inset-0 flex items-center justify-center opacity-30'>
-								<div className='absolute h-[200%] w-px -rotate-45 bg-slate-400' />
-								<div className='absolute h-[200%] w-px rotate-45 bg-slate-400' />
-							</div>
 						</section>
 
 						{/* Constraints & Roadblocks */}
@@ -342,6 +358,8 @@ export function SustainingFamilyWealthForm() {
 							<form.Field
 								name='currentObstacles'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
@@ -355,6 +373,9 @@ export function SustainingFamilyWealthForm() {
 												placeholder='Legal, interpersonal, or financial limitations?'
 												className='min-h-[100px] resize-none border-none bg-slate-50 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -381,10 +402,6 @@ export function SustainingFamilyWealthForm() {
 								<div className='mt-8'>
 									<form.Field
 										name='successMetric'
-										validators={{
-											onChange:
-												sustainingFamilyWealthSchema.shape.successMetric,
-										}}
 										children={(field) => {
 											const isInvalid =
 												field.state.meta.isTouched && !field.state.meta.isValid;
@@ -435,9 +452,6 @@ export function SustainingFamilyWealthForm() {
 							<div className='grid gap-8 sm:grid-cols-2'>
 								<form.Field
 									name='fullName'
-									validators={{
-										onChange: sustainingFamilyWealthSchema.shape.fullName,
-									}}
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;
@@ -465,9 +479,6 @@ export function SustainingFamilyWealthForm() {
 								/>
 								<form.Field
 									name='emailAddress'
-									validators={{
-										onChange: sustainingFamilyWealthSchema.shape.emailAddress,
-									}}
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;
@@ -496,48 +507,25 @@ export function SustainingFamilyWealthForm() {
 							</div>
 
 							<form.Field
-								name='preferredTime'
-								validators={{
-									onChange: sustainingFamilyWealthSchema.shape.preferredTime,
-								}}
+								name='phoneNumber'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field
 											data-invalid={isInvalid}
-											className='flex flex-col gap-3'
+											className='flex flex-col gap-1.5 sm:col-span-2'
 										>
-											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
-												Preferred Time For Consultation
+											<FieldLabel className='text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500'>
+												Phone Number
 											</FieldLabel>
-											<Select
+											<input
+												type='tel'
 												value={field.state.value}
-												onValueChange={field.handleChange}
-											>
-												<SelectTrigger
-													className={cn(
-														'border-b border-slate-300 bg-transparent px-0 pb-2 shadow-none focus:ring-0 rounded-none border-x-0 border-t-0',
-														isInvalid && 'border-red-400',
-													)}
-												>
-													<SelectValue placeholder='Select a time...' />
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value='Early Morning'>
-														Early Morning (8am - 10am)
-													</SelectItem>
-													<SelectItem value='Late Morning'>
-														Late Morning (10am - 12pm)
-													</SelectItem>
-													<SelectItem value='Afternoon'>
-														Afternoon (1pm - 4pm)
-													</SelectItem>
-													<SelectItem value='Evening'>
-														Evening (4pm - 6pm)
-													</SelectItem>
-												</SelectContent>
-											</Select>
+												onChange={(e) => field.handleChange(e.target.value)}
+												onBlur={field.handleBlur}
+												className='border-b border-slate-300 bg-transparent pb-2 pt-2 text-sm text-navy-900 placeholder:text-slate-400 focus:border-navy-900 focus:outline-none'
+											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
 											)}
@@ -553,7 +541,7 @@ export function SustainingFamilyWealthForm() {
 										<Button
 											type='submit'
 											disabled={!canSubmit}
-											className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800'
+											className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
 										>
 											{isSubmitting
 												? 'Submitting...'

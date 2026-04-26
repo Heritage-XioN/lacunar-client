@@ -1,7 +1,6 @@
 'use client';
 
 import { useForm } from '@tanstack/react-form';
-import z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -9,28 +8,9 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-
-const businessConsultingSchema = z.object({
-	businessPhase: z.string().min(1, 'Select a business phase'),
-	interventionAreas: z.array(z.string()),
-	existingSystems: z.array(z.string()),
-	recognizedBenefits: z
-		.array(z.string())
-		.min(2, 'Select exactly 2 benefits')
-		.max(2, 'Select exactly 2 benefits'),
-	vision12Month: z.string().optional(),
-	tomorrowQuestion: z.string().optional(),
-	primaryBottleneck: z.string().min(1, 'Select a primary bottleneck'),
-	organizationalReadiness: z.array(z.number()),
-	valueIndicator: z.string().optional(),
-	relationshipSuccess: z
-		.string()
-		.min(1, 'Relationship success definition is required'),
-	fullName: z.string().min(1, 'Full name is required'),
-	businessEmail: z.string().email('Invalid email address'),
-	phoneNumber: z.string().optional(),
-});
+import { submitConsultationForm } from '@/actions/consultation';
+import { toast } from 'sonner';
+import { businessConsultingSchema } from '@/lib/zod-schemas';
 
 export function BusinessConsultingForm() {
 	const form = useForm({
@@ -49,35 +29,23 @@ export function BusinessConsultingForm() {
 			businessEmail: '',
 			phoneNumber: '',
 		},
+		validators: {
+			onSubmit: businessConsultingSchema,
+			onBlur: businessConsultingSchema,
+		},
 		onSubmit: async ({ value }) => {
-			console.log('Form submitted:', value);
-			alert('Business Consulting Discovery Submitted! Check console for data.');
+			const result = await submitConsultationForm('business-consulting', value);
+			if (result.success) {
+				toast.success('Business Consulting Submitted Successfully!');
+				form.reset();
+			} else {
+				toast.error(`Submission Failed: ${result.error}`);
+			}
 		},
 	});
 
 	return (
 		<div className='min-h-screen bg-slate-50 font-sans text-navy-900 pb-32'>
-			{/* Top Nav (Optional/Inline) */}
-			<header className='flex items-center justify-between px-6 py-6 md:px-12'>
-				<div className='font-serif text-xl font-bold tracking-tight'>
-					The Architectural Editorial
-				</div>
-				<div className='hidden items-center gap-8 text-sm text-slate-500 md:flex'>
-					<a href='#' className='hover:text-navy-900'>
-						Our Strategy
-					</a>
-					<a href='#' className='hover:text-navy-900'>
-						Case Studies
-					</a>
-					<a href='#' className='hover:text-navy-900'>
-						Insights
-					</a>
-					<Button className='bg-navy-900 px-6 py-2 text-[10px] uppercase tracking-widest text-white hover:bg-navy-800 rounded-none'>
-						Contact Us
-					</Button>
-				</div>
-			</header>
-
 			<div className='mx-auto max-w-4xl px-4 pt-16 sm:px-6 lg:px-8'>
 				{/* Form Header */}
 				<div className='mb-24 text-center'>
@@ -117,9 +85,6 @@ export function BusinessConsultingForm() {
 						<div className='space-y-12 pl-5'>
 							<form.Field
 								name='businessPhase'
-								validators={{
-									onChange: businessConsultingSchema.shape.businessPhase,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -167,10 +132,10 @@ export function BusinessConsultingForm() {
 															className='cursor-pointer font-serif text-lg text-navy-900'
 														>
 															{opt.label}
+															<p className='text-[10px] text-slate-500'>
+																{opt.desc}
+															</p>
 														</Label>
-														<p className='text-[10px] text-slate-500'>
-															{opt.desc}
-														</p>
 													</div>
 												))}
 											</RadioGroup>
@@ -185,6 +150,8 @@ export function BusinessConsultingForm() {
 							<form.Field
 								name='interventionAreas'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									const options = [
 										'Strategic Planning',
 										'Talent Acquisition',
@@ -231,6 +198,9 @@ export function BusinessConsultingForm() {
 													);
 												})}
 											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -239,6 +209,8 @@ export function BusinessConsultingForm() {
 							<form.Field
 								name='existingSystems'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									const options = [
 										'Standard Operating Procedures (SOPs)',
 										'CRM & Customer Lifecycle Tracking',
@@ -280,6 +252,9 @@ export function BusinessConsultingForm() {
 													</label>
 												))}
 											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -301,9 +276,6 @@ export function BusinessConsultingForm() {
 						<div className='space-y-12 pl-5'>
 							<form.Field
 								name='recognizedBenefits'
-								validators={{
-									onChange: businessConsultingSchema.shape.recognizedBenefits,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -365,6 +337,8 @@ export function BusinessConsultingForm() {
 							<form.Field
 								name='vision12Month'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
@@ -378,6 +352,9 @@ export function BusinessConsultingForm() {
 												placeholder='Describe the architectural shift you want to see in your business...'
 												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -386,6 +363,8 @@ export function BusinessConsultingForm() {
 							<form.Field
 								name='tomorrowQuestion'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3 pt-6'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
@@ -399,6 +378,9 @@ export function BusinessConsultingForm() {
 												placeholder="What keeps you awake when contemplating next quarter's growth?"
 												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -420,9 +402,6 @@ export function BusinessConsultingForm() {
 						<div className='space-y-12 pl-5'>
 							<form.Field
 								name='primaryBottleneck'
-								validators={{
-									onChange: businessConsultingSchema.shape.primaryBottleneck,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -542,6 +521,8 @@ export function BusinessConsultingForm() {
 							<form.Field
 								name='valueIndicator'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
@@ -555,6 +536,9 @@ export function BusinessConsultingForm() {
 												placeholder='What is the single most important number we should track?'
 												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -562,9 +546,6 @@ export function BusinessConsultingForm() {
 
 							<form.Field
 								name='relationshipSuccess'
-								validators={{
-									onChange: businessConsultingSchema.shape.relationshipSuccess,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -614,9 +595,6 @@ export function BusinessConsultingForm() {
 						<div className='grid gap-8 sm:grid-cols-2'>
 							<form.Field
 								name='fullName'
-								validators={{
-									onChange: businessConsultingSchema.shape.fullName,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -645,9 +623,6 @@ export function BusinessConsultingForm() {
 							/>
 							<form.Field
 								name='businessEmail'
-								validators={{
-									onChange: businessConsultingSchema.shape.businessEmail,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -677,6 +652,8 @@ export function BusinessConsultingForm() {
 							<form.Field
 								name='phoneNumber'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-1.5 sm:col-span-2'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
@@ -690,6 +667,9 @@ export function BusinessConsultingForm() {
 												placeholder='+1 (000) 000-0000'
 												className='border-b border-slate-600 bg-transparent pb-2 pt-2 text-sm text-white focus:border-gold-500 focus:outline-none'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -703,7 +683,7 @@ export function BusinessConsultingForm() {
 									<Button
 										type='submit'
 										disabled={!canSubmit}
-										className='w-full sm:w-auto min-w-[280px] rounded-none bg-[#F3E1B6] px-8 py-6 text-[10px] font-bold uppercase tracking-widest text-navy-900 hover:bg-[#e6d3a3]'
+										className='w-full sm:w-auto min-w-[280px] rounded-none bg-[#F3E1B6] px-8 py-6 text-[10px] font-bold uppercase tracking-widest text-navy-900 hover:bg-[#e6d3a3] cursor-pointer'
 									>
 										{isSubmitting
 											? 'Submitting...'
@@ -713,34 +693,6 @@ export function BusinessConsultingForm() {
 							/>
 						</div>
 					</section>
-
-					{/* Image and Quote */}
-					<div className='flex flex-col gap-8 md:flex-row md:items-center py-16'>
-						<div className='h-48 w-full bg-slate-200 md:w-1/3 relative overflow-hidden'>
-							<div className='absolute inset-0 flex items-center justify-center opacity-30'>
-								<div className='absolute h-[200%] w-px -rotate-45 bg-slate-400' />
-								<div className='absolute h-[200%] w-px rotate-45 bg-slate-400' />
-							</div>
-						</div>
-						<div className='flex-1 space-y-6'>
-							<h3 className='font-serif text-2xl font-normal italic text-navy-900 md:text-3xl'>
-								"Growth is not merely the addition of mass, but the refinement
-								of structure."
-							</h3>
-							<p className='text-sm text-slate-500'>
-								Our intake process is designed to bypass surface-level symptoms
-								and address the underlying architecture of your enterprise. Each
-								response helps us map the Lacunar Strategy before your initial
-								consultation.
-							</p>
-							<div className='flex items-center gap-4'>
-								<div className='h-px w-8 bg-gold-500' />
-								<span className='text-[10px] font-bold uppercase tracking-widest text-slate-400'>
-									The Lacunar Philosophy
-								</span>
-							</div>
-						</div>
-					</div>
 				</form>
 			</div>
 		</div>

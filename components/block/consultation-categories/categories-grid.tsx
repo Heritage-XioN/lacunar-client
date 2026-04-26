@@ -65,7 +65,7 @@ function CategoryCard({
 					href={href}
 					className='inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gold-400 transition-colors hover:text-gold-500'
 				>
-					Learn More
+					Onboard
 					<ArrowRight className='h-3.5 w-3.5' />
 				</Link>
 			</div>

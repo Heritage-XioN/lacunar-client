@@ -8,7 +8,8 @@ export function CategoriesHeader() {
 						Institutional Intelligence
 					</p>
 					<h1 className='mt-6 font-serif text-5xl font-normal text-navy-900 md:text-6xl lg:text-7xl'>
-						Areas of<br />
+						Areas of
+						<br />
 						<span className='italic'>Command.</span>
 					</h1>
 				</div>
@@ -17,7 +18,9 @@ export function CategoriesHeader() {
 				<div className='lg:mb-4 lg:w-1/3'>
 					<div className='border-l border-slate-300 pl-6'>
 						<p className='text-sm leading-relaxed text-slate-500'>
-							We deliver strategic depth through an editorial lens, ensuring every move is underpinned by intellectual authority and architectural precision.
+							We deliver strategic depth through an editorial lens, ensuring
+							every move is underpinned by intellectual authority and
+							institutional precision.
 						</p>
 					</div>
 				</div>

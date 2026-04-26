@@ -51,6 +51,8 @@ const digitalDiscoverySchema = z.object({
 	phoneNumber: z.string().optional(),
 });
 
+import { submitConsultationForm } from '@/actions/consultation';
+
 export function DigitalDiscoveryForm() {
 	const form = useForm({
 		defaultValues: {
@@ -75,8 +77,12 @@ export function DigitalDiscoveryForm() {
 			phoneNumber: '',
 		},
 		onSubmit: async ({ value }) => {
-			console.log('Form submitted:', value);
-			alert('Digital Discovery Initialized! Check console for data.');
+			const result = await submitConsultationForm('digital-discovery', value);
+			if (result.success) {
+				alert('Digital Discovery Submitted Successfully!');
+			} else {
+				alert(`Submission Failed: ${result.error}`);
+			}
 		},
 	});
 
