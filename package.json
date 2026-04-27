@@ -4,8 +4,8 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build",
-		"start": "pnpm db:push && next start",
+		"build": "next build && pnpm db:push",
+		"start": "next start",
 		"lint": "eslint",
 		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio"

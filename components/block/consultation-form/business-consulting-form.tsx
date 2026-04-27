@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useForm } from '@tanstack/react-form';
+import { useForm, revalidateLogic } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -11,7 +11,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { submitConsultationForm } from '@/actions/consultation';
 import { toast } from 'sonner';
-import { businessConsultingSchema } from '@/lib/zod-schemas';
+import { businessConsultingFormValidators } from '@/lib/zod-schemas';
 
 export function BusinessConsultingForm() {
 	const router = useRouter();
@@ -31,17 +31,20 @@ export function BusinessConsultingForm() {
 			email: '',
 			phoneNumber: '',
 		},
-		validators: {
-			onSubmit: businessConsultingSchema,
-			onBlur: businessConsultingSchema,
-		},
+
+		validationLogic: revalidateLogic({
+			mode: 'submit', // Before first submit, validate only on submit
+			modeAfterSubmission: 'change', // After first submit, validate on every change
+		}),
+
+		validators: businessConsultingFormValidators,
 		onSubmit: async ({ value }) => {
 			const result = await submitConsultationForm('business-consulting', value);
 			if (result.success) {
 				toast.success('Business Consulting Submitted Successfully!');
 				router.push('/consultation-form/success');
 			} else {
-				toast.error(`Submission Failed: ${result.error}`);
+				toast.error(`form Submission Failed: ${result.error}`);
 			}
 		},
 	});

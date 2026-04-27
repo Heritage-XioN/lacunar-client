@@ -1,119 +1,174 @@
-import z from 'zod';
+import { z } from 'zod';
+const requiredText = (label: string) =>
+	z.string().trim().min(1, `${label} is required`);
+
+const minText = (label: string, minimum: number) =>
+	z
+		.string()
+		.trim()
+		.min(minimum, `${label} must be at least ${minimum} characters`);
+
+const requiredEmail = z.string().trim().email('Enter a valid email address');
+
+const requiredPhone = z.string().trim().min(7, 'Enter a valid phone number');
+
+const requiredSelection = (label: string) => requiredText(label);
+
+const requiredSelections = (label: string, minimum = 1) =>
+	z.array(z.string()).min(minimum, `Select at least ${minimum} ${label}`);
+
+const exactSelections = (label: string, count: number) =>
+	z
+		.array(z.string())
+		.min(count, `Select exactly ${count} ${label}`)
+		.max(count, `Select exactly ${count} ${label}`);
+
+const nonNegativeNumber = (label: string) =>
+	z
+		.number({ error: `${label} is required` })
+		.min(0, `${label} must be 0 or greater`);
+
+const sliderSelection = (
+	label: string,
+	{ min, max }: { min: number; max: number },
+) => z.array(z.number().min(min).max(max)).length(1, `${label} is required`);
+
+const requiredUrl = z.string().trim().url('Enter a valid URL');
+
+const createFormValidators = <TSchema extends z.ZodType>(schema: TSchema) => ({
+	// onBlur: schema,
+	// onSubmit: schema,
+	onDynamic: schema,
+});
 
 export const businessConsultingSchema = z.object({
-	businessPhase: z.string().min(1, 'Select a business phase'),
-	interventionAreas: z.array(z.string()).min(1, 'select at least 1'),
-	existingSystems: z.array(z.string()).min(1, 'select at least 1'),
-	recognizedBenefits: z
-		.array(z.string())
-		.min(2, 'Select exactly 2 benefits')
-		.max(2, 'Select exactly 2 benefits'),
-	vision12Month: z.string().min(1, 'pls provide some values'),
-	tomorrowQuestion: z.string().min(1, 'pls provide some values'),
-	primaryBottleneck: z.string().min(1, 'Select a primary bottleneck'),
-	organizationalReadiness: z.array(z.number()),
-	valueIndicator: z.string().min(1, 'pls provide some values'),
-	relationshipSuccess: z
-		.string()
-		.min(1, 'Relationship success definition is required'),
-	fullName: z.string().min(1, 'Full name is required'),
-	email: z.email('Invalid email address'),
-	phoneNumber: z.string().min(1, 'provide a value'),
+	businessPhase: requiredSelection('Business phase'),
+	interventionAreas: requiredSelections('intervention area'),
+	existingSystems: requiredSelections('existing system'),
+	recognizedBenefits: exactSelections('benefit', 2),
+	vision12Month: requiredText('12-month vision'),
+	tomorrowQuestion: requiredText('Tomorrow question'),
+	primaryBottleneck: requiredSelection('Primary bottleneck'),
+	organizationalReadiness: sliderSelection('Organizational readiness', {
+		min: 1,
+		max: 5,
+	}),
+	valueIndicator: requiredText('12-month value indicator'),
+	relationshipSuccess: requiredText('Relationship success definition'),
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone,
 });
+
+export const businessConsultingFormValidators = createFormValidators(
+	businessConsultingSchema,
+);
 
 export const sustainingFamilyWealthSchema = z.object({
-	governanceStructure: z.string().min(1, 'Select a governance structure'),
-	familyOpenness: z.string().min(1, 'Select a value on the scale'),
-	familyAssets: z.array(z.string()).min(1, 'Select at least one assets class'),
-	primaryObjectives: z
-		.array(z.string())
-		.min(1, 'Select at least one objective'),
-	qualitativeVision: z.string().min(2, 'enter a value'),
-	currentObstacles: z.string().min(2, 'enter a value'),
-	successMetric: z.string().min(1, 'Success metric is mandatory'),
-	fullName: z.string().min(1, 'Full name is required'),
-	email: z.email('Invalid email address'),
-	phoneNumber: z.string().min(2, 'enter a value'),
+	governanceStructure: requiredSelection('Governance structure'),
+	familyOpenness: requiredSelection('Family openness'),
+	familyAssets: requiredSelections('family asset'),
+	primaryObjectives: requiredSelections('primary objective'),
+	qualitativeVision: minText('Qualitative vision snapshot', 2),
+	currentObstacles: minText('Current obstacles', 2),
+	successMetric: requiredText('Success metric'),
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone,
 });
+
+export const sustainingFamilyWealthFormValidators = createFormValidators(
+	sustainingFamilyWealthSchema,
+);
 
 export const personalFinanceSchema = z.object({
-	primaryCatalyst: z.string().min(1, 'select one'),
-	financialStress: z.string().min(1, 'select one'),
-	monthlyNetIncome: z.number().min(0, 'Must be positive'),
-	incomeCurrency: z.string().min(1, 'provide a value'),
-	monthlyCoreExpenses: z.number().min(0, 'Must be positive'),
-	trackingMethodologies: z.array(z.string()).min(1, 'select at least one'),
-	activeAssets: z.array(z.string()).min(1, 'select at least one'),
-	debtProfile: z.array(z.string()).min(1, 'select at least one'),
-	financialReality: z.string().min(2, 'provided a value'),
-	timeHorizon: z.string().min(1, 'Select a time horizon'),
-	vision730Day: z.string().min(1, 'Select a time horizon'),
-	desiredOutcomes: z
-		.array(z.string())
-		.min(3, 'Select exactly 3 outcomes')
-		.max(3, 'Select exactly 3 outcomes'),
-	operationalObstacle: z.string().min(1, 'Select a primary obstacle'),
-	decisionConfidence: z.string().min(1, 'Select your confidence index'),
-	successDefinition: z.string().min(1, 'Please define success'),
-	fullName: z.string().min(1, 'Full name is required'),
-	email: z.email('Invalid email address'),
-	phoneNumber: z.string().min(1, 'Select a time horizon'),
+	primaryCatalyst: requiredSelection('Primary catalyst'),
+	financialStress: requiredSelection('Financial stress level'),
+	monthlyNetIncome: nonNegativeNumber('Monthly net income'),
+	incomeCurrency: requiredSelection('Income currency'),
+	monthlyCoreExpenses: nonNegativeNumber('Monthly core expenses'),
+	trackingMethodologies: requiredSelections('tracking methodology'),
+	activeAssets: requiredSelections('active asset'),
+	debtProfile: requiredSelections('debt type'),
+	financialReality: minText('Financial reality', 2),
+	timeHorizon: requiredSelection('Time horizon'),
+	vision730Day: requiredText('730-day vision'),
+	desiredOutcomes: exactSelections('desired outcome', 3),
+	operationalObstacle: requiredSelection('Primary operational obstacle'),
+	decisionConfidence: requiredSelection('Decision confidence'),
+	successDefinition: requiredText('Success definition'),
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone,
 });
+
+export const personalFinanceFormValidators = createFormValidators(
+	personalFinanceSchema,
+);
 
 export const governmentNgoSchema = z.object({
-	orgType: z.string().min(1, 'Select an organization type'),
-	primaryChallenge: z.string().min(1, 'Primary challenge is required'),
-	existingInfrastructure: z
-		.array(z.string())
-		.min(1, 'Select existing infrastructure'),
-	beneficiaryOutcomes: z.string().min(1, 'Beneficiary outcomes are required'),
-	orgSuccessMetrics: z.array(z.string()).min(1, 'Select org success metrics'),
-	vision24Month: z.string().min(1, 'Vision 24 Month is required'),
-	primaryConstraint: z.string().min(1, 'Select a constraint'),
-	innovationAppetite: z
-		.array(z.number())
-		.min(1, 'Innovation appetite is required'),
-	evidence: z.string().min(1, 'Evidence is required'),
-	partnershipAnchor: z.string().min(1, 'Partnership anchor is required'),
-	fullName: z.string().min(1, 'Full name is required'),
-	email: z.email('Invalid email address'),
-	phoneNumber: z.string().min(1, 'must be greater than 1'),
+	orgType: requiredSelection('Organization type'),
+	primaryChallenge: requiredText('Primary challenge'),
+	existingInfrastructure: requiredSelections('infrastructure option'),
+	beneficiaryOutcomes: requiredText('Beneficiary outcomes'),
+	orgSuccessMetrics: requiredSelections('success metric'),
+	vision24Month: requiredText('24-month vision'),
+	primaryConstraint: requiredSelection('Primary constraint'),
+	innovationAppetite: sliderSelection('Innovation appetite', {
+		min: 1,
+		max: 10,
+	}),
+	evidence: requiredText('Evidence'),
+	partnershipAnchor: requiredText('Partnership anchor'),
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone,
 });
 
+export const governmentNgoFormValidators =
+	createFormValidators(governmentNgoSchema);
+
 export const digitalDiscoverySchema = z.object({
-	primaryIntent: z.array(z.string()).min(1, 'Select at least one option'),
-	financialStress: z.string().min(1, 'Select a stress level'),
-	monthlyNetIncome: z.number().min(0, 'Must be positive'),
-	monthlyExpenses: z.number().min(0, 'Must be positive'),
+	primaryIntent: requiredSelections('primary intent'),
+	financialStress: requiredSelection('Financial stress level'),
+	monthlyNetIncome: nonNegativeNumber('Monthly net income'),
+	monthlyExpenses: nonNegativeNumber('Monthly expenses'),
 	trackingMethods: z.array(z.string()),
 	currentAssets: z.array(z.string()),
 	debtTypes: z.array(z.string()),
-	approximateTotalDebt: z.number().min(0, 'Must be positive').optional(),
-	keepingYouUp: z.string().min(1, 'Please provide an answer'),
-	wealthHorizon: z.string().min(1, 'Select a wealth horizon'),
-	desiredOutcomes: z
-		.array(z.string())
-		.min(2, 'Select exactly 2 outcomes')
-		.max(2, 'Select exactly 2 outcomes'),
-	coreBelief: z.string().optional(),
-	primaryConstraints: z.string().min(1, 'Select a primary constraint'),
-	upcomingLifeEvents: z.string().optional(),
-	decisionConfidence: z.array(z.number()).min(1),
-	definitionOfSuccess: z.string().min(1, 'Please define success'),
-	fullName: z.string().min(1, 'Full name is required'),
-	email: z.email('Invalid email address'),
-	phoneNumber: z.string().optional(),
+	approximateTotalDebt: z
+		.number()
+		.min(0, 'Total debt must be 0 or greater')
+		.optional(),
+	keepingYouUp: requiredText('Response'),
+	wealthHorizon: requiredSelection('Wealth horizon'),
+	desiredOutcomes: exactSelections('desired outcome', 2),
+	coreBelief: z.string().trim().optional(),
+	primaryConstraints: requiredSelection('Primary constraint'),
+	upcomingLifeEvents: z.string().trim().optional(),
+	decisionConfidence: sliderSelection('Decision confidence', {
+		min: 1,
+		max: 10,
+	}),
+	definitionOfSuccess: requiredText('Definition of success'),
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone.optional(),
 });
 
+export const digitalDiscoveryFormValidators = createFormValidators(
+	digitalDiscoverySchema,
+);
+
 export const editorialReviewSchema = z.object({
-	engagementQuality: z
-		.string()
-		.min(1, 'Please select an engagement quality tier'),
-	fullLegalName: z.string().min(1, 'Full legal name is required'),
-	executiveTitle: z.string().min(1, 'Executive title is required'),
-	organization: z.string().min(1, 'Organization is required'),
-	socials: z.url('Social media handle is required'),
-	strategicFeedback: z
-		.string()
-		.min(20, 'Strategic feedback must be at least 20 characters'),
+	engagementQuality: requiredSelection('Engagement quality'),
+	fullLegalName: requiredText('Full legal name'),
+	executiveTitle: requiredText('Executive title'),
+	organization: requiredText('Organization'),
+	socials: requiredUrl,
+	strategicFeedback: minText('Strategic feedback', 20),
 });
+
+export const editorialReviewFormValidators = createFormValidators(
+	editorialReviewSchema,
+);

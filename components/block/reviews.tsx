@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { submitEditorialReview } from '@/actions/editorial-review';
-import { editorialReviewSchema } from '@/lib/zod-schemas';
+import { editorialReviewFormValidators } from '@/lib/zod-schemas';
 import { Shield } from 'lucide-react';
 
 const QUALITY_TIERS = [
@@ -31,10 +31,7 @@ export function ReviewPage() {
 			socials: '',
 			strategicFeedback: '',
 		},
-		validators: {
-			onSubmit: editorialReviewSchema,
-			onBlur: editorialReviewSchema,
-		},
+		validators: editorialReviewFormValidators,
 		onSubmit: async ({ value }) => {
 			const result = await submitEditorialReview(value);
 			if (result.success) {

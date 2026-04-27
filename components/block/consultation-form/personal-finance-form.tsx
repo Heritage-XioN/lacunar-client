@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { useForm } from '@tanstack/react-form';
+import { revalidateLogic, useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { submitConsultationForm } from '@/actions/consultation';
-import { personalFinanceSchema } from '@/lib/zod-schemas';
+import { personalFinanceFormValidators } from '@/lib/zod-schemas';
 
 export function PersonalFinanceForm() {
 	const router = useRouter();
@@ -35,17 +35,20 @@ export function PersonalFinanceForm() {
 			email: '',
 			phoneNumber: '',
 		},
-		validators: {
-			onSubmit: personalFinanceSchema,
-			onBlur: personalFinanceSchema,
-		},
+
+		validationLogic: revalidateLogic({
+			mode: 'submit', // Before first submit, validate only on submit
+			modeAfterSubmission: 'change', // After first submit, validate on every change
+		}),
+
+		validators: personalFinanceFormValidators,
 		onSubmit: async ({ value }) => {
 			const result = await submitConsultationForm('personal-finance', value);
 			if (result.success) {
 				toast.success('Form submitted successfully!');
 				router.push('/consultation-form/success');
 			} else {
-				toast.error(`form submitted failed: ${result.error}`);
+				toast.error(`form Submission Failed: ${result.error}`);
 			}
 		},
 	});

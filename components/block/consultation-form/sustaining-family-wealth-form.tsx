@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { useForm } from '@tanstack/react-form';
+import { revalidateLogic, useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { submitConsultationForm } from '@/actions/consultation';
-import { sustainingFamilyWealthSchema } from '@/lib/zod-schemas';
+import { sustainingFamilyWealthFormValidators } from '@/lib/zod-schemas';
 
 export function SustainingFamilyWealthForm() {
 	const router = useRouter();
@@ -28,10 +28,12 @@ export function SustainingFamilyWealthForm() {
 			phoneNumber: '',
 		},
 
-		validators: {
-			onSubmit: sustainingFamilyWealthSchema,
-			onBlur: sustainingFamilyWealthSchema,
-		},
+		validationLogic: revalidateLogic({
+			mode: 'submit', // Before first submit, validate only on submit
+			modeAfterSubmission: 'change', // After first submit, validate on every change
+		}),
+
+		validators: sustainingFamilyWealthFormValidators,
 
 		onSubmit: async ({ value }) => {
 			const result = await submitConsultationForm(
@@ -42,7 +44,7 @@ export function SustainingFamilyWealthForm() {
 				toast.success('Family Wealth Intake Submitted Successfully!');
 				router.push('/consultation-form/success');
 			} else {
-				toast.error(`Submission Failed: ${result.error}`);
+				toast.error(`form Submission Failed: ${result.error}`);
 			}
 		},
 	});
@@ -189,7 +191,7 @@ export function SustainingFamilyWealthForm() {
 							/>
 
 							<form.Field
-								name='primaryObjectives'
+								name='familyAssets'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;

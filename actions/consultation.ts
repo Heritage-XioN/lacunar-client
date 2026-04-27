@@ -60,9 +60,7 @@ export async function submitConsultationForm(
 		return {
 			success: false,
 			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+				error instanceof Error ? error.cause : 'An unexpected error occurred.',
 		};
 	}
 }
