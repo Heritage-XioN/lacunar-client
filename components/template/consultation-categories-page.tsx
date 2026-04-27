@@ -1,5 +1,3 @@
-import { ConsultationNavbar } from '../block/consultation-navbar';
-import { ConsultationFooter } from '../block/consultation-footer';
 import { CategoriesHeader } from '../block/consultation-categories/categories-header';
 import { CategoriesGrid } from '../block/consultation-categories/categories-grid';
 import { CategoriesCta } from '../block/consultation-categories/categories-cta';
@@ -12,7 +10,6 @@ export function ConsultationCategoriesPage() {
 				<CategoriesGrid />
 				<CategoriesCta />
 			</main>
-			<ConsultationFooter />
 		</div>
 	);
 }

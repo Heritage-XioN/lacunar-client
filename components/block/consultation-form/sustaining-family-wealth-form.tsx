@@ -1,6 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +13,7 @@ import { submitConsultationForm } from '@/actions/consultation';
 import { sustainingFamilyWealthSchema } from '@/lib/zod-schemas';
 
 export function SustainingFamilyWealthForm() {
+	const router = useRouter();
 	const form = useForm({
 		defaultValues: {
 			governanceStructure: '',
@@ -38,7 +40,7 @@ export function SustainingFamilyWealthForm() {
 			);
 			if (result.success) {
 				toast.success('Family Wealth Intake Submitted Successfully!');
-				form.reset();
+				router.push('/consultation-form/success');
 			} else {
 				toast.error(`Submission Failed: ${result.error}`);
 			}
@@ -332,7 +334,7 @@ export function SustainingFamilyWealthForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Describe the desired legacy in your own words...'
-												className='min-h-[120px] resize-none border-none bg-slate-50 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-30 resize-none border-none bg-slate-50 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -371,7 +373,7 @@ export function SustainingFamilyWealthForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Legal, interpersonal, or financial limitations?'
-												className='min-h-[100px] resize-none border-none bg-slate-50 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-25 resize-none border-none bg-slate-50 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -541,7 +543,7 @@ export function SustainingFamilyWealthForm() {
 										<Button
 											type='submit'
 											disabled={!canSubmit}
-											className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
+											className='w-full sm:w-auto min-w-70 rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
 										>
 											{isSubmitting
 												? 'Submitting...'

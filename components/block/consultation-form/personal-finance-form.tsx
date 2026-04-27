@@ -1,6 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +13,7 @@ import { submitConsultationForm } from '@/actions/consultation';
 import { personalFinanceSchema } from '@/lib/zod-schemas';
 
 export function PersonalFinanceForm() {
+	const router = useRouter();
 	const form = useForm({
 		defaultValues: {
 			primaryCatalyst: '',
@@ -40,8 +42,8 @@ export function PersonalFinanceForm() {
 		onSubmit: async ({ value }) => {
 			const result = await submitConsultationForm('personal-finance', value);
 			if (result.success) {
-				toast.success('form submitted successfully!');
-				form.reset();
+				toast.success('Form submitted successfully!');
+				router.push('/consultation-form/success');
 			} else {
 				toast.error(`form submitted failed: ${result.error}`);
 			}
@@ -503,7 +505,7 @@ export function PersonalFinanceForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Describe the current narrative of your finances...'
-												className='min-h-[120px] resize-none border-none bg-slate-100 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-30 resize-none border-none bg-slate-100 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -588,7 +590,7 @@ export function PersonalFinanceForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Where does this path lead in 24 months if perfectly executed?'
-												className='min-h-[100px] resize-none border-none bg-slate-100 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-25 resize-none border-none bg-slate-100 p-4 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -820,7 +822,7 @@ export function PersonalFinanceForm() {
 													onBlur={field.handleBlur}
 													placeholder='Quantify your success metric...'
 													className={cn(
-														'mt-2 min-h-[100px] resize-none text-white border text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-gold-500 px-1',
+														'mt-2 min-h-25 resize-none text-white border text-sm placeholder:text-slate-500 focus-visible:ring-1 focus-visible:ring-gold-500 px-1',
 														isInvalid ? 'border-red-400' : 'border-[#3D331D]',
 													)}
 												/>
@@ -940,7 +942,7 @@ export function PersonalFinanceForm() {
 										<Button
 											type='submit'
 											disabled={!canSubmit}
-											className='w-full sm:w-auto min-w-[240px] bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
+											className='w-full sm:w-auto min-w-60 bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
 										>
 											{isSubmitting ? 'Submitting...' : 'Submit'}
 										</Button>

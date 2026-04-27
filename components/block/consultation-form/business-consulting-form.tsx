@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,6 +14,7 @@ import { toast } from 'sonner';
 import { businessConsultingSchema } from '@/lib/zod-schemas';
 
 export function BusinessConsultingForm() {
+	const router = useRouter();
 	const form = useForm({
 		defaultValues: {
 			businessPhase: '',
@@ -37,7 +39,7 @@ export function BusinessConsultingForm() {
 			const result = await submitConsultationForm('business-consulting', value);
 			if (result.success) {
 				toast.success('Business Consulting Submitted Successfully!');
-				form.reset();
+				router.push('/consultation-form/success');
 			} else {
 				toast.error(`Submission Failed: ${result.error}`);
 			}
@@ -350,7 +352,7 @@ export function BusinessConsultingForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Describe the architectural shift you want to see in your business...'
-												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
+												className='min-h-25 resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -376,7 +378,7 @@ export function BusinessConsultingForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder="What keeps you awake when contemplating next quarter's growth?"
-												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
+												className='min-h-25 resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -534,7 +536,7 @@ export function BusinessConsultingForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='What is the single most important number we should track?'
-												className='min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
+												className='min-h-25 resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -569,7 +571,7 @@ export function BusinessConsultingForm() {
 												onBlur={field.handleBlur}
 												placeholder='If we meet again in 12 months, what must have happened for you to be satisfied?'
 												className={cn(
-													'min-h-[100px] resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none',
+													'min-h-25 resize-none border-none border-b border-slate-200 bg-transparent p-0 pb-4 text-sm focus-visible:border-navy-900 focus-visible:ring-0 rounded-none',
 													isInvalid && 'border-red-400',
 												)}
 											/>
@@ -683,7 +685,7 @@ export function BusinessConsultingForm() {
 									<Button
 										type='submit'
 										disabled={!canSubmit}
-										className='w-full sm:w-auto min-w-[280px] rounded-none bg-[#F3E1B6] px-8 py-6 text-[10px] font-bold uppercase tracking-widest text-navy-900 hover:bg-[#e6d3a3] cursor-pointer'
+										className='w-full sm:w-auto min-w-70 rounded-none bg-[#F3E1B6] px-8 py-6 text-[10px] font-bold uppercase tracking-widest text-navy-900 hover:bg-[#e6d3a3] cursor-pointer'
 									>
 										{isSubmitting
 											? 'Submitting...'

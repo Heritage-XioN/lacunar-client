@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import z from 'zod';
@@ -54,6 +55,7 @@ const digitalDiscoverySchema = z.object({
 import { submitConsultationForm } from '@/actions/consultation';
 
 export function DigitalDiscoveryForm() {
+	const router = useRouter();
 	const form = useForm({
 		defaultValues: {
 			primaryIntent: [] as string[],
@@ -79,7 +81,7 @@ export function DigitalDiscoveryForm() {
 		onSubmit: async ({ value }) => {
 			const result = await submitConsultationForm('digital-discovery', value);
 			if (result.success) {
-				alert('Digital Discovery Submitted Successfully!');
+				router.push('/consultation-form/success');
 			} else {
 				alert(`Submission Failed: ${result.error}`);
 			}
@@ -567,7 +569,7 @@ export function DigitalDiscoveryForm() {
 												onBlur={field.handleBlur}
 												placeholder='Briefly describe your financial reality constraints...'
 												className={cn(
-													'min-h-[100px] resize-none bg-white',
+													'min-h-25 resize-none bg-white',
 													isInvalid ? 'border-red-400' : 'border-slate-200',
 												)}
 											/>
@@ -899,7 +901,7 @@ export function DigitalDiscoveryForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Your thoughts here...'
-												className='min-h-[100px] w-full resize-none border-none bg-transparent text-center text-lg focus-visible:ring-0 focus-visible:ring-offset-0'
+												className='min-h-25 w-full resize-none border-none bg-transparent text-center text-lg focus-visible:ring-0 focus-visible:ring-offset-0'
 											/>
 										</div>
 										{isInvalid && (
@@ -1020,7 +1022,7 @@ export function DigitalDiscoveryForm() {
 									<Button
 										type='submit'
 										disabled={!canSubmit}
-										className='w-full sm:w-auto min-w-[240px] bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800'
+										className='w-full sm:w-auto min-w-60 bg-navy-900 px-8 py-6 text-xs uppercase tracking-widest text-white hover:bg-navy-800'
 									>
 										{isSubmitting ? 'Initializing...' : 'Initialize Discovery'}
 									</Button>

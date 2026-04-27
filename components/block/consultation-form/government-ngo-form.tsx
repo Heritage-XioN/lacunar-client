@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,6 +21,7 @@ import { toast } from 'sonner';
 import { governmentNgoSchema } from '@/lib/zod-schemas';
 
 export function GovernmentNgoForm() {
+	const router = useRouter();
 	const form = useForm({
 		defaultValues: {
 			orgType: '',
@@ -44,7 +46,7 @@ export function GovernmentNgoForm() {
 			const result = await submitConsultationForm('government-ngo', value);
 			if (result.success) {
 				toast.success('Government / NGO Intake Submitted Successfully!');
-				form.reset();
+				router.push('/consultation-form/success');
 			} else {
 				toast.error(`Submission Failed: ${result.error}`);
 			}
@@ -148,7 +150,7 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Describe the structural or operational impasse your organization faces...'
-												className='min-h-[120px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-30 px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -241,7 +243,7 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Identify the specific societal shifts your target population should experience...'
-												className='min-h-[100px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-25 px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -325,7 +327,7 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Where does this project stand in two years from launch?'
-												className='min-h-[100px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-25 px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -461,7 +463,7 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='List existing data or prior pilot findings that inform this intake...'
-												className='min-h-[100px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-25 px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
 											{isInvalid && (
 												<FieldError errors={field.state.meta.errors} />
@@ -615,7 +617,7 @@ export function GovernmentNgoForm() {
 									<Button
 										type='submit'
 										disabled={!canSubmit}
-										className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
+										className='w-full sm:w-auto min-w-70 rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
 									>
 										{isSubmitting ? 'Submitting...' : 'Submit Strategic Intake'}
 									</Button>
