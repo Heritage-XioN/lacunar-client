@@ -24,7 +24,7 @@ export function SustainingFamilyWealthForm() {
 			currentObstacles: '',
 			successMetric: '',
 			fullName: '',
-			emailAddress: '',
+			email: '',
 			phoneNumber: '',
 		},
 
@@ -480,7 +480,7 @@ export function SustainingFamilyWealthForm() {
 									}}
 								/>
 								<form.Field
-									name='emailAddress'
+									name='email'
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;

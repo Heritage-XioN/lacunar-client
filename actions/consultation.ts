@@ -2,16 +2,20 @@
 
 import { db } from '@/lib/db';
 import { clients, consultation_sessions } from '@/lib/db-schema';
+import { consultationTypes } from '@/lib/types';
 import { eq } from 'drizzle-orm';
 
 /**
  * Server action to save consultation form data.
  * This handles both finding/creating a user by email and saving the form details.
  */
-export async function submitConsultationForm(category: string, formData: any) {
+export async function submitConsultationForm(
+	category: string,
+	formData: consultationTypes,
+) {
 	try {
 		// Extract basic user info from form data
-		const email = formData.emailAddres;
+		const email = formData.email;
 		const fullName = formData.fullName;
 
 		if (!email) {

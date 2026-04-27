@@ -1,4 +1,3 @@
-import { DigitalDiscoveryForm } from '@/components/block/consultation-form/digital-discovery-form';
 import { SustainingFamilyWealthForm } from '@/components/block/consultation-form/sustaining-family-wealth-form';
 import { GovernmentNgoForm } from '@/components/block/consultation-form/government-ngo-form';
 import { PersonalFinanceForm } from '@/components/block/consultation-form/personal-finance-form';
@@ -17,6 +16,6 @@ export function ConsultationFormTemplate({ slug }: { slug: string }) {
 		case 'lacunar-business-model':
 		case 'investment-and-capital-advisory':
 		default:
-			return <DigitalDiscoveryForm />;
+			return;
 	}
 }

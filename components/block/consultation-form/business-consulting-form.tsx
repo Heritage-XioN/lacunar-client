@@ -28,7 +28,7 @@ export function BusinessConsultingForm() {
 			valueIndicator: '',
 			relationshipSuccess: '',
 			fullName: '',
-			emailAddress: '',
+			email: '',
 			phoneNumber: '',
 		},
 		validators: {
@@ -624,7 +624,7 @@ export function BusinessConsultingForm() {
 								}}
 							/>
 							<form.Field
-								name='emailAddress'
+								name='email'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;

@@ -35,7 +35,7 @@ export function GovernmentNgoForm() {
 			evidence: '',
 			partnershipAnchor: '',
 			fullName: '',
-			emailAddress: '',
+			email: '',
 			phoneNumber: '',
 		},
 		validators: {
@@ -553,7 +553,7 @@ export function GovernmentNgoForm() {
 								}}
 							/>
 							<form.Field
-								name='emailAddress'
+								name='email'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;

@@ -32,7 +32,7 @@ export function PersonalFinanceForm() {
 			decisionConfidence: '',
 			successDefinition: '',
 			fullName: '',
-			emailAddress: '',
+			email: '',
 			phoneNumber: '',
 		},
 		validators: {
@@ -880,7 +880,7 @@ export function PersonalFinanceForm() {
 									}}
 								/>
 								<form.Field
-									name='emailAddress'
+									name='email'
 									children={(field) => {
 										const isInvalid =
 											field.state.meta.isTouched && !field.state.meta.isValid;

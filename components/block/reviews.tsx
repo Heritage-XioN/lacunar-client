@@ -51,7 +51,7 @@ export function ReviewPage() {
 			{/* Header */}
 			<div className='mx-auto max-w-3xl px-6 pt-20 pb-12 text-center sm:px-10'>
 				<h1 className='font-serif text-4xl font-normal italic text-navy-900 sm:text-5xl lg:text-6xl'>
-					Submit an Editorial Review
+					Submit a Review
 				</h1>
 				<p className='mx-auto mt-8 max-w-lg text-sm leading-relaxed text-slate-500'>
 					Your strategic perspective ensures our commitment to excellence

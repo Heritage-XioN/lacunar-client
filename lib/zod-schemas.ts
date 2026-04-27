@@ -17,7 +17,7 @@ export const businessConsultingSchema = z.object({
 		.string()
 		.min(1, 'Relationship success definition is required'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.email('Invalid email address'),
+	email: z.email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'provide a value'),
 });
 
@@ -32,7 +32,7 @@ export const sustainingFamilyWealthSchema = z.object({
 	currentObstacles: z.string().min(2, 'enter a value'),
 	successMetric: z.string().min(1, 'Success metric is mandatory'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.email('Invalid email address'),
+	email: z.email('Invalid email address'),
 	phoneNumber: z.string().min(2, 'enter a value'),
 });
 
@@ -56,7 +56,7 @@ export const personalFinanceSchema = z.object({
 	decisionConfidence: z.string().min(1, 'Select your confidence index'),
 	successDefinition: z.string().min(1, 'Please define success'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.email('Invalid email address'),
+	email: z.email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'Select a time horizon'),
 });
 
@@ -76,7 +76,7 @@ export const governmentNgoSchema = z.object({
 	evidence: z.string().min(1, 'Evidence is required'),
 	partnershipAnchor: z.string().min(1, 'Partnership anchor is required'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.email('Invalid email address'),
+	email: z.email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'must be greater than 1'),
 });
 
@@ -101,7 +101,7 @@ export const digitalDiscoverySchema = z.object({
 	decisionConfidence: z.array(z.number()).min(1),
 	definitionOfSuccess: z.string().min(1, 'Please define success'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.email('Invalid email address'),
+	email: z.email('Invalid email address'),
 	phoneNumber: z.string().optional(),
 });
 
