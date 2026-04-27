@@ -17,7 +17,7 @@ export const businessConsultingSchema = z.object({
 		.string()
 		.min(1, 'Relationship success definition is required'),
 	fullName: z.string().min(1, 'Full name is required'),
-	businessEmail: z.string().email('Invalid email address'),
+	emailAddress: z.string().email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'provide a value'),
 });
 
@@ -56,6 +56,26 @@ export const personalFinanceSchema = z.object({
 	decisionConfidence: z.string().min(1, 'Select your confidence index'),
 	successDefinition: z.string().min(1, 'Please define success'),
 	fullName: z.string().min(1, 'Full name is required'),
-	email: z.string().email('Invalid email address'),
+	emailAddress: z.string().email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'Select a time horizon'),
+});
+
+export const governmentNgoSchema = z.object({
+	orgType: z.string().min(1, 'Select an organization type'),
+	primaryChallenge: z.string().min(1, 'Primary challenge is required'),
+	existingInfrastructure: z
+		.array(z.string())
+		.min(1, 'Select existing infrastructure'),
+	beneficiaryOutcomes: z.string().min(1, 'Beneficiary outcomes are required'),
+	orgSuccessMetrics: z.array(z.string()).min(1, 'Select org success metrics'),
+	vision24Month: z.string().min(1, 'Vision 24 Month is required'),
+	primaryConstraint: z.string().min(1, 'Select a constraint'),
+	innovationAppetite: z
+		.array(z.number())
+		.min(1, 'Innovation appetite is required'),
+	evidence: z.string().min(1, 'Evidence is required'),
+	partnershipAnchor: z.string().min(1, 'Partnership anchor is required'),
+	fullName: z.string().min(1, 'Full name is required'),
+	emailAddress: z.string().email('Invalid email address'),
+	phoneNumber: z.string().min(1, 'must be greater than 1'),
 });

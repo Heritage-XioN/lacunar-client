@@ -10,11 +10,9 @@ import { eq } from 'drizzle-orm';
  */
 export async function submitConsultationForm(category: string, formData: any) {
 	try {
-		// 1. Extract basic user info from form data
-		// Different forms use different field names, so we try a few common ones
-		const email =
-			formData.emailAddress || formData.secureEmail || formData.email;
-		const fullName = formData.fullName || formData.legalName || formData.name;
+		// Extract basic user info from form data
+		const email = formData.emailAddres;
+		const fullName = formData.fullName;
 
 		if (!email) {
 			return {
@@ -23,7 +21,7 @@ export async function submitConsultationForm(category: string, formData: any) {
 			};
 		}
 
-		// 2. Find or Create User
+		// Find or Create User
 		let userId: number;
 		const existingUser = await db.query.users.findFirst({
 			where: eq(users.email, email),
@@ -42,7 +40,7 @@ export async function submitConsultationForm(category: string, formData: any) {
 			userId = newUser.id;
 		}
 
-		// 3. Save Consultation Session
+		// Save Consultation Session
 		await db.insert(consultation_sessions).values({
 			userId,
 			category,

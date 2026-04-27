@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-	title: 'Vantage Strategy | The Informed Authority',
+	title: 'Lacunar consulting | The Informed Authority',
 	description:
 		'Bespoke architectural strategy for institutions ready to redefine their market position through precision, data, and legacy-building insights.',
 };

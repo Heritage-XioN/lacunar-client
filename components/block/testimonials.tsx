@@ -10,7 +10,7 @@ const testimonials = [
 	},
 	{
 		quote:
-			'"In a market saturated with generic advice, Vantage Strategy stands out as a beacon of intellectual authority. Their insights are sharp, actionable, and visionary."',
+			'"In a market saturated with generic advice, Lacunar consulting stands out as a beacon of intellectual authority. Their insights are sharp, actionable, and visionary."',
 		name: 'Elena Rodriguez',
 		role: 'VP Operations, Nexus Tech',
 		avatarSrc: '/avatar-elena.png',

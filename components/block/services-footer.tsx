@@ -1,5 +1,11 @@
 export function ServicesFooter() {
-	const links = ['Privacy Policy', 'Terms of Service', 'Disciplinary', 'Global Offices', 'Expertise'];
+	const links = [
+		'Privacy Policy',
+		'Terms of Service',
+		'Disciplinary',
+		'Global Offices',
+		'Expertise',
+	];
 
 	return (
 		<footer className='border-t border-slate-100 bg-white'>
@@ -7,9 +13,7 @@ export function ServicesFooter() {
 				<div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
 					{/* Left — Brand + tagline */}
 					<div>
-						<p className='text-lg italic text-navy-900'>
-							Vantage Strategy
-						</p>
+						<p className='text-lg italic text-navy-900'>Lacunar consulting</p>
 						<p className='mt-1 text-xs font-semibold uppercase tracking-widest text-slate-400'>
 							The Informed Authority. Cultivating.
 						</p>

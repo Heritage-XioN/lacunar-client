@@ -14,11 +14,8 @@ export function ServicesNavbar() {
 		<header className='bg-navy-950'>
 			<nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16'>
 				{/* Logo */}
-				<a
-					href='/'
-					className='text-sm font-semibold italic text-white'
-				>
-					Vantage Strategy
+				<a href='/' className='text-sm font-semibold italic text-white'>
+					Lacunar consulting
 				</a>
 
 				{/* Desktop nav links */}
@@ -31,7 +28,7 @@ export function ServicesNavbar() {
 								'relative font-sans text-sm transition-colors duration-200',
 								link.active
 									? 'text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-gold-500'
-									: 'text-slate-400 hover:text-white'
+									: 'text-slate-400 hover:text-white',
 							)}
 						>
 							{link.label}

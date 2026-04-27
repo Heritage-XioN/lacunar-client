@@ -1,7 +1,6 @@
 'use client';
 
 import { useForm } from '@tanstack/react-form';
-import z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,23 +15,9 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-
-const governmentNgoSchema = z.object({
-	orgType: z.string().min(1, 'Select an organization type'),
-	primaryChallenge: z.string().optional(),
-	existingInfrastructure: z.array(z.string()),
-	beneficiaryOutcomes: z.string().optional(),
-	orgSuccessMetrics: z.array(z.string()),
-	vision24Month: z.string().optional(),
-	primaryConstraint: z.string().min(1, 'Select a constraint'),
-	innovationAppetite: z.array(z.number()),
-	evidence: z.string().optional(),
-	partnershipAnchor: z.string().min(1, 'Partnership anchor is required'),
-	fullName: z.string().min(1, 'Full name is required'),
-	officialEmail: z.string().email('Invalid email address'),
-	phoneNumber: z.string().optional(),
-});
+import { submitConsultationForm } from '@/actions/consultation';
+import { toast } from 'sonner';
+import { governmentNgoSchema } from '@/lib/zod-schemas';
 
 export function GovernmentNgoForm() {
 	const form = useForm({
@@ -48,38 +33,26 @@ export function GovernmentNgoForm() {
 			evidence: '',
 			partnershipAnchor: '',
 			fullName: '',
-			officialEmail: '',
+			emailAddress: '',
 			phoneNumber: '',
 		},
+		validators: {
+			onSubmit: governmentNgoSchema,
+			onBlur: governmentNgoSchema,
+		},
 		onSubmit: async ({ value }) => {
-			console.log('Form submitted:', value);
-			alert('Government / NGO Intake Submitted! Check console for data.');
+			const result = await submitConsultationForm('government-ngo', value);
+			if (result.success) {
+				toast.success('Government / NGO Intake Submitted Successfully!');
+				form.reset();
+			} else {
+				toast.error(`Submission Failed: ${result.error}`);
+			}
 		},
 	});
 
 	return (
 		<div className='min-h-screen bg-slate-50 font-sans text-navy-900 pb-32'>
-			{/* Top Nav (Optional/Inline) */}
-			<header className='flex items-center justify-between px-6 py-6 md:px-12'>
-				<div className='font-serif text-xl font-bold tracking-widest uppercase'>
-					Strategic Intake
-				</div>
-				<div className='hidden items-center gap-8 text-sm text-slate-500 md:flex'>
-					<a href='#' className='hover:text-navy-900'>
-						Our Approach
-					</a>
-					<a href='#' className='hover:text-navy-900'>
-						Expertise
-					</a>
-					<a href='#' className='hover:text-navy-900'>
-						Insights
-					</a>
-					<Button className='bg-navy-900 px-6 py-2 text-[10px] uppercase tracking-widest text-white hover:bg-navy-800 rounded-none'>
-						Consultation
-					</Button>
-				</div>
-			</header>
-
 			<div className='mx-auto max-w-4xl px-4 pt-16 sm:px-6 lg:px-8'>
 				{/* Form Header */}
 				<div className='mb-24 text-center'>
@@ -115,9 +88,6 @@ export function GovernmentNgoForm() {
 						<div className='space-y-8 pl-10'>
 							<form.Field
 								name='orgType'
-								validators={{
-									onChange: governmentNgoSchema.shape.orgType,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -165,6 +135,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='primaryChallenge'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
@@ -176,8 +148,11 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Describe the structural or operational impasse your organization faces...'
-												className='min-h-[120px] resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-[120px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -186,6 +161,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='existingInfrastructure'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									const options = [
 										'Legacy Digital Frameworks',
 										'Inter-departmental Data Silos',
@@ -226,24 +203,13 @@ export function GovernmentNgoForm() {
 													</label>
 												))}
 											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
 							/>
-
-							{/* Image Interstitial */}
-							<div className='relative mt-12 h-64 overflow-hidden bg-slate-200'>
-								<div className='absolute inset-0 flex items-center justify-center opacity-30'>
-									<div className='absolute h-[200%] w-px -rotate-45 bg-slate-400' />
-									<div className='absolute h-[200%] w-px rotate-45 bg-slate-400' />
-								</div>
-								<div className='absolute inset-0 flex items-end bg-gradient-to-t from-navy-900/80 to-transparent p-8'>
-									<h3 className='font-serif text-2xl font-normal leading-snug text-white md:text-3xl'>
-										"Structure is the translation of purpose into physical and
-										operational reality."
-									</h3>
-								</div>
-							</div>
 						</div>
 					</section>
 
@@ -262,6 +228,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='beneficiaryOutcomes'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
@@ -273,8 +241,11 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Identify the specific societal shifts your target population should experience...'
-												className='min-h-[100px] resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-[100px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -283,6 +254,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='orgSuccessMetrics'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									const options = [
 										'OPERATIONAL EFFICIENCY',
 										'PUBLIC SENTIMENT SCORE',
@@ -328,6 +301,9 @@ export function GovernmentNgoForm() {
 													);
 												})}
 											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -336,6 +312,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='vision24Month'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
@@ -347,8 +325,11 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='Where does this project stand in two years from launch?'
-												className='min-h-[100px] resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-[100px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -368,9 +349,6 @@ export function GovernmentNgoForm() {
 						<div className='space-y-8 pl-10'>
 							<form.Field
 								name='primaryConstraint'
-								validators={{
-									onChange: governmentNgoSchema.shape.primaryConstraint,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -420,6 +398,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='innovationAppetite'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-6 pt-4'>
 											<div className='flex items-center justify-between'>
@@ -445,6 +425,9 @@ export function GovernmentNgoForm() {
 													<span>High Transformative Risk</span>
 												</div>
 											</div>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -465,6 +448,8 @@ export function GovernmentNgoForm() {
 							<form.Field
 								name='evidence'
 								children={(field) => {
+									const isInvalid =
+										field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field className='flex flex-col gap-3'>
 											<FieldLabel className='text-[10px] font-bold uppercase tracking-widest text-navy-900'>
@@ -476,8 +461,11 @@ export function GovernmentNgoForm() {
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
 												placeholder='List existing data or prior pilot findings that inform this intake...'
-												className='min-h-[100px] resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
+												className='min-h-[100px] px-3 resize-none bg-white border-slate-200 focus-visible:ring-1 focus-visible:ring-navy-900'
 											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
 										</Field>
 									);
 								}}
@@ -485,9 +473,6 @@ export function GovernmentNgoForm() {
 
 							<form.Field
 								name='partnershipAnchor'
-								validators={{
-									onChange: governmentNgoSchema.shape.partnershipAnchor,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -539,9 +524,6 @@ export function GovernmentNgoForm() {
 						<div className='grid gap-8 sm:grid-cols-2 pl-10'>
 							<form.Field
 								name='fullName'
-								validators={{
-									onChange: governmentNgoSchema.shape.fullName,
-								}}
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -569,10 +551,7 @@ export function GovernmentNgoForm() {
 								}}
 							/>
 							<form.Field
-								name='officialEmail'
-								validators={{
-									onChange: governmentNgoSchema.shape.officialEmail,
-								}}
+								name='emailAddress'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -636,7 +615,7 @@ export function GovernmentNgoForm() {
 									<Button
 										type='submit'
 										disabled={!canSubmit}
-										className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800'
+										className='w-full sm:w-auto min-w-[280px] rounded-none bg-navy-900 px-8 py-6 text-xs font-bold uppercase tracking-widest text-white hover:bg-navy-800 cursor-pointer'
 									>
 										{isSubmitting ? 'Submitting...' : 'Submit Strategic Intake'}
 									</Button>

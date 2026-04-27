@@ -1,5 +1,6 @@
 import { CtaSection } from '../block/cta';
 import { Footer } from '../block/footer';
+import { Foundation } from '../block/foundation';
 import { Hero } from '../block/hero';
 import { Navbar } from '../block/navbar';
 import { QuoteSection } from '../block/quote';
@@ -12,6 +13,7 @@ export function LandingPage() {
 			<Navbar />
 			<main>
 				<Hero />
+				<Foundation />
 				<Services />
 				<QuoteSection />
 				<Testimonials />

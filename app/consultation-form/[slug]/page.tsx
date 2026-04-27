@@ -2,8 +2,8 @@ import { ConsultationFormTemplate } from '@/components/template/consultation-for
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'Consultation Form | Vantage Strategy',
-	description: 'Book your free initial consultation with Vantage Strategy.',
+	title: 'Consultation Form | Lacunar consulting',
+	description: 'Book your free initial consultation with Lacunar consulting.',
 };
 
 export default async function ConsultationFormPage({
