@@ -1,26 +1,27 @@
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '../ui/button';
+import Link from 'next/link';
 
 export function Hero() {
 	return (
-		<section className='relative min-h-[600px] overflow-hidden bg-navy-900 pt-24 pb-20 sm:min-h-[700px] sm:pt-32 sm:pb-28'>
+		<section className='relative isolate min-h-[600px] overflow-hidden bg-navy-900 pt-24 pb-20 sm:min-h-[700px] sm:pt-32 sm:pb-28'>
 			{/* Background image */}
 			<Image
 				src='/hero-cityscape.png'
 				alt='City skyline'
 				fill
-				className='object-cover object-center'
+				className='z-0 object-cover object-center'
 				priority
 				quality={90}
 			/>
 
 			{/* Dark gradient overlay */}
-			<div className='absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-950/75 to-navy-900/60' />
-			<div className='absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-navy-950/40' />
+			<div className='absolute inset-0 z-10 bg-gradient-to-r from-navy-950/90 via-navy-950/75 to-navy-900/60' />
+			<div className='absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-transparent to-navy-950/40' />
 
 			{/* Content */}
-			<div className='relative mx-auto max-w-7xl px-6 sm:px-10 lg:px-16'>
+			<div className='relative z-20 mx-auto max-w-7xl px-6 sm:px-10 lg:px-16'>
 				<div className='max-w-2xl space-y-6'>
 					{/* Label */}
 					<p className='text-xs font-semibold uppercase tracking-widest text-gold-400'>
@@ -48,9 +49,9 @@ export function Hero() {
 							type='button'
 							asChild
 						>
-							<a href='/consultation-categories'>
+							<Link href='/consultation-categories'>
 								Book a Consultation <ArrowRight className='ml-2 h-4 w-4' />
-							</a>
+							</Link>
 						</Button>
 
 						<Button
