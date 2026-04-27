@@ -11,14 +11,15 @@ export function Hero() {
 				src='/hero-cityscape.png'
 				alt='City skyline'
 				fill
-				className='z-0 object-cover object-center'
+				className='z-0 object-cover object-[58%_center] sm:object-center'
 				priority
 				quality={90}
 			/>
 
 			{/* Dark gradient overlay */}
-			<div className='absolute inset-0 z-10 bg-gradient-to-r from-navy-950/90 via-navy-950/75 to-navy-900/60' />
-			<div className='absolute inset-0 z-10 bg-gradient-to-t from-navy-950/80 via-transparent to-navy-950/40' />
+			<div className='absolute inset-0 z-10 bg-navy-950/75 sm:bg-navy-950/25' />
+			<div className='absolute inset-0 z-10 bg-linear-to-r from-navy-950/90 via-navy-950/75 to-navy-900/60' />
+			<div className='absolute inset-0 z-10 bg-linear-to-t from-navy-950/80 via-transparent to-navy-950/40' />
 
 			{/* Content */}
 			<div className='relative z-20 mx-auto max-w-7xl px-6 sm:px-10 lg:px-16'>
