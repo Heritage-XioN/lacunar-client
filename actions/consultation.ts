@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { users, consultation_sessions } from '@/lib/db-schema';
+import { clients, consultation_sessions } from '@/lib/db-schema';
 import { eq } from 'drizzle-orm';
 
 /**
@@ -23,20 +23,20 @@ export async function submitConsultationForm(category: string, formData: any) {
 
 		// Find or Create User
 		let userId: number;
-		const existingUser = await db.query.users.findFirst({
-			where: eq(users.email, email),
+		const existingUser = await db.query.clients.findFirst({
+			where: eq(clients.email, email),
 		});
 
 		if (existingUser) {
 			userId = existingUser.id;
 		} else {
 			const [newUser] = await db
-				.insert(users)
+				.insert(clients)
 				.values({
 					email,
 					fullName: fullName || 'Anonymous Client',
 				})
-				.returning({ id: users.id });
+				.returning({ id: clients.id });
 			userId = newUser.id;
 		}
 

@@ -17,7 +17,7 @@ export const businessConsultingSchema = z.object({
 		.string()
 		.min(1, 'Relationship success definition is required'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.string().email('Invalid email address'),
+	emailAddress: z.email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'provide a value'),
 });
 
@@ -32,7 +32,7 @@ export const sustainingFamilyWealthSchema = z.object({
 	currentObstacles: z.string().min(2, 'enter a value'),
 	successMetric: z.string().min(1, 'Success metric is mandatory'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.string().email('Invalid email address'),
+	emailAddress: z.email('Invalid email address'),
 	phoneNumber: z.string().min(2, 'enter a value'),
 });
 
@@ -56,7 +56,7 @@ export const personalFinanceSchema = z.object({
 	decisionConfidence: z.string().min(1, 'Select your confidence index'),
 	successDefinition: z.string().min(1, 'Please define success'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.string().email('Invalid email address'),
+	emailAddress: z.email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'Select a time horizon'),
 });
 
@@ -76,6 +76,44 @@ export const governmentNgoSchema = z.object({
 	evidence: z.string().min(1, 'Evidence is required'),
 	partnershipAnchor: z.string().min(1, 'Partnership anchor is required'),
 	fullName: z.string().min(1, 'Full name is required'),
-	emailAddress: z.string().email('Invalid email address'),
+	emailAddress: z.email('Invalid email address'),
 	phoneNumber: z.string().min(1, 'must be greater than 1'),
+});
+
+export const digitalDiscoverySchema = z.object({
+	primaryIntent: z.array(z.string()).min(1, 'Select at least one option'),
+	financialStress: z.string().min(1, 'Select a stress level'),
+	monthlyNetIncome: z.number().min(0, 'Must be positive'),
+	monthlyExpenses: z.number().min(0, 'Must be positive'),
+	trackingMethods: z.array(z.string()),
+	currentAssets: z.array(z.string()),
+	debtTypes: z.array(z.string()),
+	approximateTotalDebt: z.number().min(0, 'Must be positive').optional(),
+	keepingYouUp: z.string().min(1, 'Please provide an answer'),
+	wealthHorizon: z.string().min(1, 'Select a wealth horizon'),
+	desiredOutcomes: z
+		.array(z.string())
+		.min(2, 'Select exactly 2 outcomes')
+		.max(2, 'Select exactly 2 outcomes'),
+	coreBelief: z.string().optional(),
+	primaryConstraints: z.string().min(1, 'Select a primary constraint'),
+	upcomingLifeEvents: z.string().optional(),
+	decisionConfidence: z.array(z.number()).min(1),
+	definitionOfSuccess: z.string().min(1, 'Please define success'),
+	fullName: z.string().min(1, 'Full name is required'),
+	emailAddress: z.email('Invalid email address'),
+	phoneNumber: z.string().optional(),
+});
+
+export const editorialReviewSchema = z.object({
+	engagementQuality: z
+		.string()
+		.min(1, 'Please select an engagement quality tier'),
+	fullLegalName: z.string().min(1, 'Full legal name is required'),
+	executiveTitle: z.string().min(1, 'Executive title is required'),
+	organization: z.string().min(1, 'Organization is required'),
+	socials: z.url('Social media handle is required'),
+	strategicFeedback: z
+		.string()
+		.min(20, 'Strategic feedback must be at least 20 characters'),
 });
