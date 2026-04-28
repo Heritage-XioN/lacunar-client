@@ -12,6 +12,7 @@ export const clients = pgTable('clients', {
 	id: serial('id').primaryKey(),
 	fullName: text('full_name').notNull(),
 	email: varchar('email', { length: 256 }).unique(),
+	phoneNumber: text('phone_no').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 });
 
@@ -32,7 +33,8 @@ export const consultation_session_summary = pgTable(
 		consultationSessionId: serial('consultation_session_id').references(
 			() => consultation_sessions.id,
 		),
-		summary: text('summary').notNull(),
+		consultantId: serial('consultant_id').references(() => consultants.id),
+		summary: jsonb('summary').notNull(),
 		createdAt: timestamp('created_at').defaultNow(),
 		updatedAt: timestamp('updated_at').defaultNow(),
 	},
@@ -47,4 +49,14 @@ export const reviews = pgTable('reviews', {
 	social: text('social').notNull(),
 	feedback: text('feedback').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const consultants = pgTable('consultants', {
+	id: serial('id').primaryKey(),
+	fullName: text('full_name').notNull(),
+	email: varchar('email', { length: 256 }).unique().notNull(),
+	phoneNumber: text('phone_no').notNull(),
+	passwordHash: text('password').notNull(),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow(),
 });

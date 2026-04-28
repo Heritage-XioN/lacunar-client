@@ -14,21 +14,10 @@ export async function submitConsultationForm(
 	formData: consultationTypes,
 ) {
 	try {
-		// Extract basic user info from form data
-		const email = formData.email;
-		const fullName = formData.fullName;
-
-		if (!email) {
-			return {
-				success: false,
-				error: 'Email is required for form submission.',
-			};
-		}
-
 		// Find or Create User
 		let userId: number;
 		const existingUser = await db.query.clients.findFirst({
-			where: eq(clients.email, email),
+			where: eq(clients.email, formData.email),
 		});
 
 		if (existingUser) {
@@ -37,8 +26,9 @@ export async function submitConsultationForm(
 			const [newUser] = await db
 				.insert(clients)
 				.values({
-					email,
-					fullName: fullName || 'Anonymous Client',
+					email: formData.email,
+					fullName: formData.fullName,
+					phoneNumber: formData.phoneNumber,
 				})
 				.returning({ id: clients.id });
 			userId = newUser.id;

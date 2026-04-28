@@ -2,13 +2,24 @@ import { z } from 'zod';
 const requiredText = (label: string) =>
 	z.string().trim().min(1, `${label} is required`);
 
+const securePassword = z
+	.string()
+	.min(8, 'Password must be at least 8 characters')
+	.regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+	.regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+	.regex(/[0-9]/, 'Password must contain at least one number')
+	.regex(
+		/[^A-Za-z0-9]/,
+		'Password must contain at least one special character',
+	);
+
 const minText = (label: string, minimum: number) =>
 	z
 		.string()
 		.trim()
 		.min(minimum, `${label} must be at least ${minimum} characters`);
 
-const requiredEmail = z.string().trim().email('Enter a valid email address');
+const requiredEmail = z.email('Enter a valid email address');
 
 const requiredPhone = z.string().trim().min(7, 'Enter a valid phone number');
 
@@ -170,3 +181,19 @@ export const ReviewSchema = z.object({
 });
 
 export const ReviewFormValidators = createFormValidators(ReviewSchema);
+
+export const signInSchema = z.object({
+	email: requiredEmail,
+	password: securePassword,
+});
+
+export const signInFormValidators = createFormValidators(signInSchema);
+
+export const signUpSchema = z.object({
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone,
+	password: securePassword,
+});
+
+export const signUpFormValidators = createFormValidators(signUpSchema);

@@ -1,6 +1,5 @@
 import { db } from '@/lib/db';
 import { reviews } from '@/lib/db-schema';
-import { ReviewsCardProps } from '@/types/reviews';
 import { desc } from 'drizzle-orm';
 
 export async function GET(request: Request) {
