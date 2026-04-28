@@ -1,21 +1,14 @@
 'use client';
 
 import useSWR from 'swr';
-import { ReviewsCard } from '../ui/reviews-card';
-import { Suspense } from 'react';
+import { ReviewsCard, ReviewsCardSkeleton } from '../ui/reviews-card';
 import { ReviewsCarddb } from '@/types/reviews';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function ReviewsSection() {
-	const { data, error, isLoading } = useSWR<ReviewsCarddb[]>(
-		'/api/review',
-		fetcher,
-	);
+	const { data, isLoading } = useSWR<ReviewsCarddb[]>('/api/review', fetcher);
 
-	if (!data) {
-		return null;
-	}
 	return (
 		<section className='bg-slate-50 py-20 sm:py-28'>
 			<div className='mx-auto max-w-7xl px-6 sm:px-10 lg:px-16'>
@@ -30,7 +23,13 @@ export function ReviewsSection() {
 				</div>
 				<div className='min-h-65'>
 					{/* Testimonial cards */}
-					<Suspense fallback={<p>Loading posts from database...</p>}>
+					{isLoading || !data ? (
+						<div className='grid gap-6 md:grid-cols-2 xl:grid-cols-3 '>
+							{Array.from({ length: 3 }).map((_, i) => (
+								<ReviewsCardSkeleton key={i} />
+							))}
+						</div>
+					) : (
 						<div className='grid gap-6 md:grid-cols-2 xl:grid-cols-3 '>
 							{data.map((item) => (
 								<ReviewsCard
@@ -43,7 +42,7 @@ export function ReviewsSection() {
 								/>
 							))}
 						</div>
-					</Suspense>
+					)}
 				</div>
 			</div>
 		</section>
