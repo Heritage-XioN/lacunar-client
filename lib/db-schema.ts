@@ -38,13 +38,13 @@ export const consultation_session_summary = pgTable(
 	},
 );
 
-export const editorial_reviews = pgTable('editorial_reviews', {
+export const reviews = pgTable('reviews', {
 	id: serial('id').primaryKey(),
 	engagementQuality: varchar('engagement_quality', { length: 10 }).notNull(),
-	fullLegalName: text('full_legal_name').notNull(),
-	executiveTitle: text('executive_title'),
-	organization: text('organization'),
-	socials: text('socials').notNull(),
-	strategicFeedback: text('strategic_feedback').notNull(),
+	fullName: text('fullName').notNull(),
+	role: text('role').notNull(),
+	organisation: text('organisation').notNull(),
+	social: text('social').notNull(),
+	feedback: text('feedback').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 });

@@ -160,15 +160,13 @@ export const digitalDiscoveryFormValidators = createFormValidators(
 	digitalDiscoverySchema,
 );
 
-export const editorialReviewSchema = z.object({
+export const ReviewSchema = z.object({
 	engagementQuality: requiredSelection('Engagement quality'),
-	fullLegalName: requiredText('Full legal name'),
-	executiveTitle: requiredText('Executive title'),
-	organization: requiredText('Organization'),
-	socials: requiredUrl,
-	strategicFeedback: minText('Strategic feedback', 20),
+	fullName: requiredText('Full legal name'),
+	role: requiredText('Executive title'),
+	organisation: requiredText('Organization'),
+	social: requiredUrl,
+	feedback: minText('Feedback', 20),
 });
 
-export const editorialReviewFormValidators = createFormValidators(
-	editorialReviewSchema,
-);
+export const ReviewFormValidators = createFormValidators(ReviewSchema);

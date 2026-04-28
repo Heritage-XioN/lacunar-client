@@ -1,15 +1,15 @@
 'use client';
 
-import { useForm } from '@tanstack/react-form';
+import { revalidateLogic, useForm } from '@tanstack/react-form';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import { submitEditorialReview } from '@/actions/editorial-review';
-import { editorialReviewFormValidators } from '@/lib/zod-schemas';
+import { ReviewFormValidators } from '@/lib/zod-schemas';
 import { Shield } from 'lucide-react';
+import { useSWRConfig } from 'swr';
 
 const QUALITY_TIERS = [
 	{ numeral: 'I', label: 'Emergent' },
@@ -21,24 +21,36 @@ const QUALITY_TIERS = [
 
 export function ReviewPage() {
 	const router = useRouter();
-
+	const { mutate } = useSWRConfig();
 	const form = useForm({
 		defaultValues: {
 			engagementQuality: '',
-			fullLegalName: '',
-			executiveTitle: '',
-			organization: '',
-			socials: '',
-			strategicFeedback: '',
+			fullName: '',
+			role: '',
+			organisation: '',
+			social: '',
+			feedback: '',
 		},
-		validators: editorialReviewFormValidators,
+
+		validationLogic: revalidateLogic({
+			mode: 'submit', // Before first submit, validate only on submit
+			modeAfterSubmission: 'change', // After first submit, validate on every change
+		}),
+
+		validators: ReviewFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await submitEditorialReview(value);
-			if (result.success) {
+			const result = await fetch('/api/review', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(value),
+			});
+			const data = await result.json();
+			if (data.success) {
 				toast.success('Review submitted successfully!');
+				mutate('/api/review');
 				router.push('/review/success');
 			} else {
-				toast.error(`Submission failed: ${result.error}`);
+				toast.error(`Submission failed: ${data}`);
 			}
 		},
 	});
@@ -126,7 +138,7 @@ export function ReviewPage() {
 						{/* Name & Title Row */}
 						<div className='grid gap-8 sm:grid-cols-2'>
 							<form.Field
-								name='fullLegalName'
+								name='fullName'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -155,7 +167,7 @@ export function ReviewPage() {
 							/>
 
 							<form.Field
-								name='executiveTitle'
+								name='role'
 								children={(field) => {
 									const isInvalid =
 										field.state.meta.isTouched && !field.state.meta.isValid;
@@ -186,7 +198,7 @@ export function ReviewPage() {
 
 						{/* Organization */}
 						<form.Field
-							name='organization'
+							name='organisation'
 							children={(field) => {
 								const isInvalid =
 									field.state.meta.isTouched && !field.state.meta.isValid;
@@ -216,7 +228,7 @@ export function ReviewPage() {
 
 						{/* Social Media */}
 						<form.Field
-							name='socials'
+							name='social'
 							children={(field) => {
 								const isInvalid =
 									field.state.meta.isTouched && !field.state.meta.isValid;
@@ -246,7 +258,7 @@ export function ReviewPage() {
 
 						{/* Strategic Feedback */}
 						<form.Field
-							name='strategicFeedback'
+							name='feedback'
 							children={(field) => {
 								const isInvalid =
 									field.state.meta.isTouched && !field.state.meta.isValid;

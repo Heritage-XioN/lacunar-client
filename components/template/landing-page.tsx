@@ -5,7 +5,7 @@ import { Hero } from '../block/hero';
 import { Navbar } from '../block/navbar';
 import { QuoteSection } from '../block/quote';
 import { Services } from '../block/services';
-import { Testimonials } from '../block/testimonials';
+import { ReviewsSection } from '../block/reviews-section';
 
 export function LandingPage() {
 	return (
@@ -16,7 +16,7 @@ export function LandingPage() {
 				<Foundation />
 				<Services />
 				<QuoteSection />
-				<Testimonials />
+				<ReviewsSection />
 				<CtaSection />
 			</main>
 			<Footer />

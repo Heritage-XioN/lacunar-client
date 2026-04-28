@@ -52,6 +52,11 @@ export async function submitConsultationForm(
 			status: 'pending',
 		});
 
+		// check if user already has consultation with the same title
+		// db.update(consultation_sessions)
+		// 	.set({})
+		// 	.where(eq(consultation_sessions.id, 1) && eq(clients.id, 1));
+
 		return {
 			success: true,
 		};
