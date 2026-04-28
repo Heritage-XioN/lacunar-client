@@ -27,7 +27,7 @@ export function SignUpForm() {
 
 		validators: signUpFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await fetch('/api/auth', {
+			const result = await fetch('/api/auth/sign-up', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(value),
@@ -35,10 +35,10 @@ export function SignUpForm() {
 			const data = await result.json();
 			if (data.success) {
 				toast.success('signup successful!');
-				mutate('/api/auth');
+				mutate('/api/auth/sign-up');
 				router.push('/sign-in');
 			} else {
-				toast.error(`signup failed: ${data}`);
+				toast.error(`signup failed: ${data.error}`);
 			}
 		},
 	});

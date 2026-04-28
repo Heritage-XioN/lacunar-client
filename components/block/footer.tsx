@@ -1,5 +1,17 @@
-const navigation = ['Services', 'About', 'Case Studies', 'Insights'];
-const connect = ['LinkedIn', 'Privacy Policy', 'Terms of Service'];
+import Link from 'next/link';
+
+const navigation = [
+	{ label: 'Services', href: '/services' },
+	{ label: 'Reviews', href: '/review' },
+	{ label: 'Case Studies', href: '/case-studies' },
+	{ label: 'Consultant Login', href: '/sign-in' },
+];
+
+const connect = [
+	{ label: 'LinkedIn', href: '#' },
+	{ label: 'Privacy Policy', href: '/privacy-policy' },
+	{ label: 'Terms of Service', href: '/terms-of-service' },
+];
 
 export function Footer() {
 	return (
@@ -25,13 +37,13 @@ export function Footer() {
 						</p>
 						<ul className='mt-5 space-y-3'>
 							{navigation.map((item) => (
-								<li key={item}>
-									<a
-										href='#'
+								<li key={item.label}>
+									<Link
+										href={item.href}
 										className='text-sm text-slate-400 transition-colors duration-200 hover:text-white'
 									>
-										{item}
-									</a>
+										{item.label}
+									</Link>
 								</li>
 							))}
 						</ul>
@@ -44,13 +56,13 @@ export function Footer() {
 						</p>
 						<ul className='mt-5 space-y-3'>
 							{connect.map((item) => (
-								<li key={item}>
-									<a
-										href='#'
+								<li key={item.label}>
+									<Link
+										href={item.href}
 										className='text-sm text-slate-400 transition-colors duration-200 hover:text-white'
 									>
-										{item}
-									</a>
+										{item.label}
+									</Link>
 								</li>
 							))}
 						</ul>

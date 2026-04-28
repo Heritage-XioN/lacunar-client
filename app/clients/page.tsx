@@ -1,4 +1,5 @@
 import { ClientsPage } from '@/components/template/clients-page';
+import { verifyAuth } from '@/lib/dal';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
 		'Executive portfolio overview. Managed and active strategic partnerships across multiple global sectors.',
 };
 
-export default function ClientsRoute() {
+export default async function ClientsRoute() {
+	const session = await verifyAuth();
 	return <ClientsPage />;
 }
