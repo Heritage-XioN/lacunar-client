@@ -1,4 +1,4 @@
-import { ClientsPage } from '@/components/template/clients-page';
+import { ConsultantsPage } from '@/components/template/consultants-page';
 import { verifyAuth } from '@/lib/dal';
 import { Metadata } from 'next';
 
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 
 export default async function ClientsRoute() {
 	//const session = await verifyAuth();
-	return <ClientsPage />;
+	return <ConsultantsPage />;
 }
