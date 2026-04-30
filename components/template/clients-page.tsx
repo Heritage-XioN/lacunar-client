@@ -14,7 +14,7 @@ export function ClientsPage() {
 				<ClientsHeader />
 
 				{/* ─── Client Table ─── */}
-				<div className='mt-10 min-h-[420px] rounded-lg border border-slate-200 bg-white px-2'>
+				<div className='mt-10 rounded-lg border border-slate-200 bg-white px-2'>
 					<ClientsTable />
 				</div>
 			</main>

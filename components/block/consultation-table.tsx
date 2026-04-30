@@ -1,31 +1,8 @@
 import { consultations } from '@/types/clients';
 import { columns } from '../ui/consultation-table-columns';
 import { DataTable } from '../ui/data-table';
-import { consultants } from '@/types/consultants';
 
-const ConsultantionsTable = async () => {
-	// simulates fetch data
-	const data: consultations[] = [
-		{
-			id: 1,
-			userId: 1,
-			category: 'personal finance',
-			status: 'pending',
-			onBoardingDetails: 'stuff',
-			createdAt: '12',
-			updatedAt: '12',
-		},
-		{
-			id: 2,
-			userId: 3,
-			category: 'personal finance',
-			status: 'FINALIZED',
-			onBoardingDetails: 'stuff',
-			createdAt: '12',
-			updatedAt: '12',
-		},
-	];
-
+const ConsultantionsTable = ({ data }: { data: consultations[] }) => {
 	// the DataTable component is a reusable shadcn data-table component
 	// if you want to adjust(add, remove, modify) the column(s)
 	// do not change anything in the DataTable component unless you know what you are doing

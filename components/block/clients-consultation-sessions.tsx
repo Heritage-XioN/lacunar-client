@@ -9,6 +9,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import ConsultantionsTable from './consultation-table';
+import { consultations } from '@/types/clients';
 
 const sessionsData = [
 	{
@@ -41,7 +42,7 @@ const sessionsData = [
 	},
 ];
 
-export function ConsultationSessions() {
+export function ConsultationSessions({ data }: { data: consultations[] }) {
 	return (
 		<div>
 			<div className='mb-6 flex items-center justify-between'>
@@ -57,7 +58,7 @@ export function ConsultationSessions() {
 			</div>
 
 			<div className='border border-slate-100 bg-white px-2'>
-				<ConsultantionsTable />
+				<ConsultantionsTable data={data} />
 			</div>
 		</div>
 	);

@@ -46,6 +46,7 @@ export function PersonalFinanceForm() {
 			const result = await submitConsultationForm('personal-finance', value);
 			if (result.success) {
 				toast.success('Form submitted successfully!');
+				form.reset();
 				router.push('/consultation-form/success');
 			} else {
 				toast.error(`form Submission Failed: ${result.error}`);

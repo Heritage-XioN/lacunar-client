@@ -42,6 +42,7 @@ export function BusinessConsultingForm() {
 			const result = await submitConsultationForm('business-consulting', value);
 			if (result.success) {
 				toast.success('Business Consulting Submitted Successfully!');
+				form.reset();
 				router.push('/consultation-form/success');
 			} else {
 				toast.error(`form Submission Failed: ${result.error}`);

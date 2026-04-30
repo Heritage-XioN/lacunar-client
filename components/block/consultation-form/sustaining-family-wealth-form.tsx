@@ -42,9 +42,10 @@ export function SustainingFamilyWealthForm() {
 			);
 			if (result.success) {
 				toast.success('Family Wealth Intake Submitted Successfully!');
+				form.reset();
 				router.push('/consultation-form/success');
 			} else {
-				toast.error(`form Submission Failed: ${result.error}`);
+				toast.error(`Form Submission Failed: ${result.error}`);
 			}
 		},
 	});

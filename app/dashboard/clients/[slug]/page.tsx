@@ -12,6 +12,5 @@ export default async function ClientRoute({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	console.log(slug);
-	return <ClientDetailPage />;
+	return <ClientDetailPage slug={slug} />;
 }
