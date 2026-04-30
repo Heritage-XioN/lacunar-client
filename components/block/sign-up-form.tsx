@@ -7,11 +7,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { signUpFormValidators } from '@/lib/zod-schemas';
-import { useSWRConfig } from 'swr';
 
 export function SignUpForm() {
 	const router = useRouter();
-	const { mutate } = useSWRConfig();
 	const form = useForm({
 		defaultValues: {
 			fullName: '',
@@ -35,7 +33,7 @@ export function SignUpForm() {
 			const data = await result.json();
 			if (data.success) {
 				toast.success('signup successful!');
-				mutate('/api/auth/sign-up');
+				form.reset();
 				router.push('/sign-in');
 			} else {
 				toast.error(`signup failed: ${data.error}`);

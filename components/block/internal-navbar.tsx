@@ -1,6 +1,7 @@
-import { Bell, Search, Settings, User } from 'lucide-react';
+import { Bell, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 const navLinks = [
 	{ label: 'Dashboard', href: '/dashboard' },
@@ -15,20 +16,20 @@ interface InternalNavbarProps {
 
 export function InternalNavbar({ activeLink = 'Dashboard' }: InternalNavbarProps) {
 	return (
-		<header className='border-b border-slate-200 bg-white'>
-			<nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 sm:px-10 lg:px-16'>
+		<header className='bg-slate-50'>
+			<nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16'>
 				{/* Left — Logo + Nav */}
-				<div className='flex items-center gap-10'>
+				<div className='flex items-center gap-12'>
 					{/* Logo */}
 					<a
 						href='/'
-						className='font-serif text-lg font-semibold italic text-navy-900'
+						className='font-serif text-xl font-bold italic text-navy-900'
 					>
 						The Stratagem
 					</a>
 
 					{/* Nav Links */}
-					<div className='hidden items-center gap-6 md:flex'>
+					<div className='hidden items-center gap-8 md:flex'>
 						{navLinks.map((link) => (
 							<a
 								key={link.label}
@@ -36,8 +37,8 @@ export function InternalNavbar({ activeLink = 'Dashboard' }: InternalNavbarProps
 								className={cn(
 									'text-sm transition-colors duration-200',
 									link.label === activeLink
-										? 'font-semibold text-navy-900 underline underline-offset-[6px] decoration-navy-900 decoration-2'
-										: 'text-slate-400 hover:text-navy-900',
+										? 'font-semibold text-navy-900 underline underline-offset-[8px] decoration-navy-900 decoration-2'
+										: 'text-slate-500 hover:text-navy-900',
 								)}
 							>
 								{link.label}
@@ -46,18 +47,8 @@ export function InternalNavbar({ activeLink = 'Dashboard' }: InternalNavbarProps
 					</div>
 				</div>
 
-				{/* Right — Search + Icons */}
-				<div className='hidden items-center gap-3 md:flex'>
-					{/* Search */}
-					<div className='flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-1.5'>
-						<Search className='h-4 w-4 text-slate-400' />
-						<input
-							type='text'
-							placeholder='Search portfolio...'
-							className='w-36 bg-transparent text-sm text-navy-900 placeholder:text-slate-400 focus:outline-none'
-						/>
-					</div>
-
+				{/* Right — Icons + Avatar */}
+				<div className='hidden items-center gap-4 md:flex'>
 					{/* Icons */}
 					<Button
 						variant='ghost'
@@ -77,8 +68,14 @@ export function InternalNavbar({ activeLink = 'Dashboard' }: InternalNavbarProps
 					</Button>
 
 					{/* Avatar */}
-					<div className='flex h-8 w-8 items-center justify-center rounded-full bg-navy-900'>
-						<User className='h-4 w-4 text-white' />
+					<div className='h-8 w-8 overflow-hidden rounded-md ml-2'>
+						<Image
+							src='/avatar-alistair.png'
+							alt='User Avatar'
+							width={32}
+							height={32}
+							className='h-full w-full object-cover'
+						/>
 					</div>
 				</div>
 			</nav>

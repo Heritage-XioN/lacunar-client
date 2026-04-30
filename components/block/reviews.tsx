@@ -48,6 +48,7 @@ export function ReviewPage() {
 			if (data.success) {
 				toast.success('Review submitted successfully!');
 				mutate('/api/review');
+				form.reset();
 				router.push('/review/success');
 			} else {
 				toast.error(`Submission failed: ${data}`);

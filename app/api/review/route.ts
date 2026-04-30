@@ -32,7 +32,6 @@ export async function POST(request: Request) {
 		});
 		return Response.json({ success: true });
 	} catch (error) {
-		console.error('Review Submission Error:', error);
 		return Response.json({
 			success: false,
 			status: 500,

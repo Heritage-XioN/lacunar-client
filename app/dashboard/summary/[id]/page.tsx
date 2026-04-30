@@ -1,4 +1,4 @@
-import { ArchivePage } from '@/components/template/archive-page';
+import { SummaryPage } from '@/components/template/summary-page';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,6 +7,11 @@ export const metadata: Metadata = {
 		'A definitive log of strategic interventions, executive dialogues, and tactical shifts across your engagement history.',
 };
 
-export default function ArchiveRoute() {
-	return <ArchivePage />;
+export default async function ArchiveRoute({
+	params,
+}: {
+	params: Promise<{ id: string }>;
+}) {
+	const { id } = await params;
+	return <SummaryPage id={id} />;
 }

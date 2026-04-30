@@ -13,7 +13,6 @@ export async function GET(
 		});
 		return Response.json(consultationData);
 	} catch (error) {
-		console.error('Error fetching consultation:', error);
 		return Response.json({
 			error:
 				error instanceof Error ? error.cause : 'An unexpected error occurred.',

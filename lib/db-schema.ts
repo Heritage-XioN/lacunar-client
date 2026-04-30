@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
 	pgTable,
 	serial,
@@ -34,7 +35,8 @@ export const consultation_session_summary = pgTable(
 			() => consultation_sessions.id,
 		),
 		consultantId: serial('consultant_id').references(() => consultants.id),
-		summary: jsonb('summary').notNull(),
+		title: text('title').notNull(),
+		summary: text('summary').notNull(),
 		createdAt: timestamp('created_at').defaultNow(),
 		updatedAt: timestamp('updated_at').defaultNow(),
 	},
@@ -60,3 +62,17 @@ export const consultants = pgTable('consultants', {
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const consultantRelations = relations(consultants, ({ many }) => ({
+	summaries: many(consultation_session_summary),
+}));
+
+export const summaryRelations = relations(
+	consultation_session_summary,
+	({ one }) => ({
+		consultant: one(consultants, {
+			fields: [consultation_session_summary.consultantId],
+			references: [consultants.id],
+		}),
+	}),
+);

@@ -13,7 +13,6 @@ export async function GET(
 		});
 		return Response.json(clientData);
 	} catch (error) {
-		console.error('Error fetching client:', error);
 		return Response.json({
 			error:
 				error instanceof Error ? error.cause : 'An unexpected error occurred.',

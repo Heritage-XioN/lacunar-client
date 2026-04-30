@@ -197,3 +197,10 @@ export const signUpSchema = z.object({
 });
 
 export const signUpFormValidators = createFormValidators(signUpSchema);
+
+export const summarySchema = z.object({
+	title: requiredText('summary title'),
+	summary: minText('Summary', 10),
+});
+
+export const summaryFormValidators = createFormValidators(summarySchema);

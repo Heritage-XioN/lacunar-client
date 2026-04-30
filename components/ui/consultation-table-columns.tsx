@@ -52,7 +52,7 @@ export const columns: ColumnDef<consultations>[] = [
 	{
 		id: 'actions',
 		cell: ({ row }) => {
-			const id = parseFloat(row.getValue('id'));
+			const id = row.getValue('id') as string;
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -66,7 +66,7 @@ export const columns: ColumnDef<consultations>[] = [
 						<DropdownMenuItem>Edit</DropdownMenuItem>
 						<DropdownMenuItem>Disable</DropdownMenuItem>
 						<DropdownMenuItem>
-							<Link href={`/dashboard/client/${id}`}>view summary</Link>
+							<Link href={`/dashboard/summary/${id}`}>view summary</Link>
 						</DropdownMenuItem>
 						<DropdownMenuItem className='text-red-600'>Delete</DropdownMenuItem>
 					</DropdownMenuContent>
