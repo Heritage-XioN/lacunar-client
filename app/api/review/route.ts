@@ -1,14 +1,24 @@
-import { db } from '@/lib/db';
-import { reviews } from '@/lib/db-schema';
-import { desc } from 'drizzle-orm';
+import { mapReview } from '@/lib/db-row-mappers';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-export async function GET(request: Request) {
+export async function GET() {
 	try {
-		const reviewData = await db.query.reviews.findMany({
-			limit: 6,
-			orderBy: [desc(reviews.createdAt)],
-		});
-		return Response.json({ data: reviewData, success: true });
+		const supabase = await createSupabaseServerClient();
+		const { data, error } = await supabase
+			.from('reviews')
+			.select('*')
+			.order('created_at', { ascending: false })
+			.limit(6);
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
+
+		return Response.json({ data: data.map(mapReview), success: true });
 	} catch (error) {
 		console.error('Error fetching editorial reviews:', error);
 		return Response.json({
@@ -23,14 +33,24 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
 	try {
 		const formData = await request.json();
-		await db.insert(reviews).values({
-			engagementQuality: formData.engagementQuality,
+		const supabase = await createSupabaseServerClient();
+		const { error } = await supabase.from('reviews').insert({
+			engagement_quality: formData.engagementQuality,
 			fullName: formData.fullName,
 			role: formData.role,
 			organisation: formData.organisation,
 			social: formData.social,
 			feedback: formData.feedback,
 		});
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
+
 		return Response.json({ success: true });
 	} catch (error) {
 		return Response.json({

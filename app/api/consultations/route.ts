@@ -1,27 +1,44 @@
-import { db } from '@/lib/db';
-import { clients, consultation_sessions } from '@/lib/db-schema';
-import { eq, and } from 'drizzle-orm';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function POST(request: Request) {
 	try {
 		const { category, formData } = await request.json();
-		// Find or Create User
-		let clientId: number;
-		const existingUser = await db.query.clients.findFirst({
-			where: eq(clients.email, formData.email),
-		});
+		let clientId: string;
+		const { data: existingUser, error: existingUserError } = await supabaseAdmin
+			.from('clients')
+			.select('id')
+			.eq('email', formData.email)
+			.maybeSingle();
+
+		if (existingUserError) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: existingUserError.message,
+			});
+		}
 
 		if (existingUser) {
 			clientId = existingUser.id;
 		} else {
-			const [newUser] = await db
-				.insert(clients)
-				.values({
+			const { data: newUser, error: newUserError } = await supabaseAdmin
+				.from('clients')
+				.insert({
 					email: formData.email,
-					fullName: formData.fullName,
-					phoneNumber: formData.phoneNumber,
+					full_name: formData.fullName,
+					phone_no: formData.phoneNumber,
 				})
-				.returning({ id: clients.id });
+				.select('id')
+				.single();
+
+			if (newUserError) {
+				return Response.json({
+					success: false,
+					status: 500,
+					error: newUserError.message,
+				});
+			}
+
 			clientId = newUser.id;
 		}
 
@@ -29,36 +46,56 @@ export async function POST(request: Request) {
 		delete formData['email'];
 		delete formData['phoneNumber'];
 
-		const existingConsultation = await db.query.consultation_sessions.findFirst(
-			{
-				where: and(
-					eq(consultation_sessions.clientId, clientId),
-					eq(consultation_sessions.category, category),
-				),
-			},
-		);
+		const { data: existingConsultation, error: existingConsultationError } =
+			await supabaseAdmin
+				.from('consultation_sessions')
+				.select('id')
+				.eq('client_id', clientId)
+				.eq('category', category)
+				.maybeSingle();
+
+		if (existingConsultationError) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: existingConsultationError.message,
+			});
+		}
 
 		if (existingConsultation) {
-			await db
-				.update(consultation_sessions)
-				.set({
-					onBoardingDetails: formData,
-					updatedAt: new Date(),
+			const { error } = await supabaseAdmin
+				.from('consultation_sessions')
+				.update({
+					onBoarding_details: formData,
+					updated_at: new Date().toISOString(),
 				})
-				.where(
-					and(
-						eq(consultation_sessions.id, existingConsultation.id),
-						eq(consultation_sessions.clientId, clientId),
-					),
-				);
+				.eq('id', existingConsultation.id)
+				.eq('client_id', clientId);
+
+			if (error) {
+				return Response.json({
+					success: false,
+					status: 500,
+					error: error.message,
+				});
+			}
 		} else {
-			// Save new Consultation Session
-			await db.insert(consultation_sessions).values({
-				clientId: clientId,
-				category: category,
-				onBoardingDetails: formData,
-				status: 'pending',
-			});
+			const { error } = await supabaseAdmin
+				.from('consultation_sessions')
+				.insert({
+					client_id: clientId,
+					category: category,
+					onBoarding_details: formData,
+					status: 'pending',
+				});
+
+			if (error) {
+				return Response.json({
+					success: false,
+					status: 500,
+					error: error.message,
+				});
+			}
 		}
 		return Response.json({ success: true });
 	} catch (error) {

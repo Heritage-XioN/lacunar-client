@@ -1,7 +1,6 @@
-import { db } from '@/lib/db';
-import { consultation_session_summary } from '@/lib/db-schema';
+import { mapSummary } from '@/lib/db-row-mappers';
 import { getSession } from '@/lib/session';
-import { desc, eq } from 'drizzle-orm';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export async function GET(
 	request: Request,
@@ -18,17 +17,22 @@ export async function GET(
 			});
 		}
 
-		const summaryData = await db.query.consultation_session_summary.findMany({
-			where: eq(
-				consultation_session_summary.consultationSessionId,
-				parseInt(id),
-			),
-			orderBy: desc(consultation_session_summary.createdAt),
-			with: {
-				consultant: true,
-			},
-		});
-		return Response.json({ data: summaryData, success: true });
+		const supabase = await createSupabaseServerClient();
+		const { data, error } = await supabase
+			.from('consultation_session_summary')
+			.select('*, consultants(*)')
+			.eq('consultation_session_id', id)
+			.order('created_at', { ascending: false });
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
+
+		return Response.json({ data: data.map(mapSummary), success: true });
 	} catch (error) {
 		return Response.json({
 			success: false,
@@ -56,12 +60,22 @@ export async function POST(
 			});
 		}
 
-		await db.insert(consultation_session_summary).values({
-			consultationSessionId: parseInt(id),
-			consultantId: session.consultantId,
+		const supabase = await createSupabaseServerClient();
+		const { error } = await supabase.from('consultation_session_summary').insert({
+			consultation_session_id: id,
+			consultant_id: session.consultantId,
 			title: formData.title,
 			summary: formData.summary,
 		});
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
+
 		return Response.json({ success: true });
 	} catch (error) {
 		return Response.json({
@@ -79,7 +93,6 @@ export async function DELETE(
 ) {
 	try {
 		const { id } = await params;
-		const summaryId = parseInt(id);
 
 		const session = await getSession();
 		if (!session.isLoggedin) {
@@ -102,9 +115,19 @@ export async function DELETE(
 			});
 		}
 
-		await db
-			.delete(consultation_session_summary)
-			.where(eq(consultation_session_summary.id, summaryId));
+		const supabase = await createSupabaseServerClient();
+		const { error } = await supabase
+			.from('consultation_session_summary')
+			.delete()
+			.eq('id', id);
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
 
 		return Response.json({ success: true });
 	} catch (error) {

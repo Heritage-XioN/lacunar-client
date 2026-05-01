@@ -1,7 +1,8 @@
-import { db } from '@/lib/db';
+import { mapConsultant } from '@/lib/db-row-mappers';
 import { getSession } from '@/lib/session';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-export async function GET(request: Request) {
+export async function GET() {
 	try {
 		const session = await getSession();
 		if (!session.isLoggedin) {
@@ -12,10 +13,23 @@ export async function GET(request: Request) {
 			});
 		}
 
-		const consultantData = await db.query.consultants.findMany();
+		const supabase = await createSupabaseServerClient();
+		const { data, error } = await supabase
+			.from('consultants')
+			.select('*')
+			.order('created_at', { ascending: false });
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
+
 		return Response.json({
 			success: true,
-			data: consultantData,
+			data: data.map(mapConsultant),
 		});
 	} catch (error) {
 		return Response.json({

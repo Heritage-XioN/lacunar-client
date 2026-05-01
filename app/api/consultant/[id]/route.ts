@@ -1,7 +1,5 @@
-import { db } from '@/lib/db';
-import { consultants, consultation_session_summary } from '@/lib/db-schema';
 import { getSession } from '@/lib/session';
-import { eq } from 'drizzle-orm';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function DELETE(
 	request: Request,
@@ -9,7 +7,6 @@ export async function DELETE(
 ) {
 	try {
 		const { id } = await params;
-		const consultantId = parseInt(id);
 		const session = await getSession();
 		if (!session.isLoggedin) {
 			return Response.json({
@@ -27,7 +24,7 @@ export async function DELETE(
 			});
 		}
 
-		if (session.consultantId === consultantId) {
+		if (session.consultantId === id) {
 			return Response.json({
 				success: false,
 				status: 401,
@@ -35,11 +32,28 @@ export async function DELETE(
 			});
 		}
 
-		// // Delete related summaries by this consultant
-		// await db.delete(consultation_session_summary).where(eq(consultation_session_summary.consultantId, consultantId));
+		const { error: profileError } = await supabaseAdmin
+			.from('consultants')
+			.delete()
+			.eq('id', id);
 
-		// Delete consultant
-		await db.delete(consultants).where(eq(consultants.id, consultantId));
+		if (profileError) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: profileError.message,
+			});
+		}
+
+		const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
+
+		if (authError) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: authError.message,
+			});
+		}
 
 		return Response.json({ success: true });
 	} catch (error) {
