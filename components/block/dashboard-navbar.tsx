@@ -1,13 +1,18 @@
-import { Bell, Settings } from 'lucide-react';
-import Image from 'next/image';
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { LogoutDialogBtn } from '../ui/logout-dialog-btn';
 
 const links = [
 	{ label: 'Clients', href: '/dashboard/clients' },
-	{ label: 'consultants', href: '/dashboard/consultants' },
+	{ label: 'Consultants', href: '/dashboard/consultants' },
 ];
 
 export function DashboardNavbar() {
+	const pathname = usePathname();
+
 	return (
 		<header className='border-b border-slate-200 bg-white'>
 			<div className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16'>
@@ -23,36 +28,30 @@ export function DashboardNavbar() {
 
 					{/* Navigation */}
 					<nav className='hidden items-center gap-8 md:flex'>
-						{links.map((items) => (
-							<Link
-								key={items.href}
-								href={items.href}
-								className='text-[10px] font-semibold tracking-widest text-slate-400 hover:text-navy-900'
-							>
-								{items.label}
-							</Link>
-						))}
+						{links.map((items) => {
+							const isActive = pathname.startsWith(items.href);
+							return (
+								<Link
+									key={items.href}
+									href={items.href}
+									className={cn(
+										'text-[10px] font-semibold tracking-widest transition-colors hover:text-navy-900',
+										isActive
+											? 'text-navy-900 underline underline-offset-4 decoration-2 decoration-navy-900'
+											: 'text-slate-400',
+									)}
+								>
+									{items.label}
+								</Link>
+							);
+						})}
 					</nav>
 				</div>
 
 				{/* Right: Icons & Avatar */}
-				{/* <div className='flex items-center gap-6'>
-					<button className='text-slate-500 hover:text-navy-900'>
-						<Bell className='h-5 w-5' />
-					</button>
-					<button className='text-slate-500 hover:text-navy-900'>
-						<Settings className='h-5 w-5' />
-					</button>
-					<div className='h-9 w-9 overflow-hidden rounded-md'>
-						<Image
-							src='/avatar-alistair.png'
-							alt='Alistair Vance'
-							width={36}
-							height={36}
-							className='h-full w-full object-cover'
-						/>
-					</div>
-				</div> */}
+				<div className='flex items-center gap-6'>
+					<LogoutDialogBtn />
+				</div>
 			</div>
 		</header>
 	);

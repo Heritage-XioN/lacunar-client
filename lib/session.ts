@@ -25,6 +25,7 @@ export async function getSession() {
 
 //this should be used for logout
 export async function destroySession() {
+	'use server';
 	const session = await getSession();
 	session.destroy();
 }
