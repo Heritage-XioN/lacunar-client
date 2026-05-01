@@ -9,7 +9,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import { submitConsultationForm } from '@/actions/consultation';
 import { personalFinanceFormValidators } from '@/lib/zod-schemas';
 
 export function PersonalFinanceForm() {
@@ -43,13 +42,25 @@ export function PersonalFinanceForm() {
 
 		validators: personalFinanceFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await submitConsultationForm('personal-finance', value);
-			if (result.success) {
-				toast.success('Form submitted successfully!');
-				form.reset();
-				router.push('/consultation-form/success');
-			} else {
-				toast.error(`form Submission Failed: ${result.error}`);
+			try {
+				const result = await fetch('/api/consultations', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						category: 'personal-finance',
+						formData: value,
+					}),
+				});
+				const data = await result.json();
+				if (data.success) {
+					toast.success('Form submitted successfully!');
+					form.reset();
+					router.push('/consultation-form/success');
+				} else {
+					toast.error(`form Submission Failed: ${data.error}`);
+				}
+			} catch (error) {
+				toast.error('an unexpected error occured');
 			}
 		},
 	});

@@ -1,4 +1,5 @@
 import { SummaryPage } from '@/components/template/summary-page';
+import { verifyAuth } from '@/lib/dal';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export default async function ArchiveRoute({
 }: {
 	params: Promise<{ id: string }>;
 }) {
+	const session = await verifyAuth();
 	const { id } = await params;
 	return <SummaryPage id={id} />;
 }

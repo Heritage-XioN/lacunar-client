@@ -8,13 +8,14 @@ export async function GET(request: Request) {
 			limit: 6,
 			orderBy: [desc(reviews.createdAt)],
 		});
-		return Response.json(reviewData);
+		return Response.json({ data: reviewData, success: true });
 	} catch (error) {
 		console.error('Error fetching editorial reviews:', error);
 		return Response.json({
+			success: false,
+			status: 500,
 			error:
 				error instanceof Error ? error.cause : 'An unexpected error occurred.',
-			status: 500,
 		});
 	}
 }

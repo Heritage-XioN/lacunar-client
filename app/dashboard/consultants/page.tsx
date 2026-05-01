@@ -9,6 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ClientsRoute() {
-	//const session = await verifyAuth();
+	const session = await verifyAuth();
 	return <ConsultantsPage />;
 }

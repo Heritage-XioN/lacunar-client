@@ -16,8 +16,9 @@ export async function POST(request: Request) {
 
 		if (!consultant) {
 			return Response.json({
-				error: 'Consultant not found.',
-				status: 404,
+				success: false,
+				error: 'Invalid credentials.',
+				status: 401,
 			});
 		}
 
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
 		if (!isPasswordValid) {
 			return Response.json({
+				success: false,
 				error: 'Invalid credentials.',
 				status: 401,
 			});
@@ -48,15 +50,16 @@ export async function POST(request: Request) {
 		session.isLoggedin = true;
 		session.token = token;
 		session.consultantId = consultant.id;
+		session.consultantRole = consultant.role;
 		await session.save();
 
 		return Response.json({ success: true });
 	} catch (error) {
 		return Response.json({
 			success: false,
+			status: 500,
 			error:
 				error instanceof Error ? error.cause : 'An unexpected error occurred.',
-			status: 500,
 		});
 	}
 }

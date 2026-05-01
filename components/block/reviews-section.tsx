@@ -7,7 +7,10 @@ import { ReviewsCarddb } from '@/types/reviews';
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function ReviewsSection() {
-	const { data, isLoading } = useSWR<ReviewsCarddb[]>('/api/review', fetcher);
+	const { data, isLoading } = useSWR<{ data: ReviewsCarddb[] }>(
+		'/api/review',
+		fetcher,
+	);
 
 	return (
 		<section className='bg-slate-50 py-20 sm:py-28'>
@@ -31,7 +34,7 @@ export function ReviewsSection() {
 						</div>
 					) : (
 						<div className='grid gap-6 md:grid-cols-2 xl:grid-cols-3 '>
-							{data.map((item) => (
+							{data.data.map((item) => (
 								<ReviewsCard
 									key={item.id}
 									feedback={item.feedback}

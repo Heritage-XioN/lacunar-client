@@ -38,7 +38,7 @@ export function SignInForm() {
 					form.reset();
 					router.push('/dashboard/clients');
 				} else {
-					toast.error(`signin failed: ${data?.error?.error}`);
+					toast.error(`signin failed: ${data?.error}`);
 				}
 			} catch (error) {
 				toast.error('An unexpected error occurred');

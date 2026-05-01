@@ -9,6 +9,15 @@ export async function GET(
 ) {
 	try {
 		const { id } = await params;
+		const session = await getSession();
+		if (!session.isLoggedin) {
+			return Response.json({
+				success: false,
+				status: 401,
+				error: 'Unauthorized',
+			});
+		}
+
 		const summaryData = await db.query.consultation_session_summary.findMany({
 			where: eq(
 				consultation_session_summary.consultationSessionId,
@@ -19,12 +28,13 @@ export async function GET(
 				consultant: true,
 			},
 		});
-		return Response.json(summaryData);
+		return Response.json({ data: summaryData, success: true });
 	} catch (error) {
 		return Response.json({
+			success: false,
+			status: 500,
 			error:
 				error instanceof Error ? error.cause : 'An unexpected error occurred.',
-			status: 500,
 		});
 	}
 }
@@ -34,18 +44,21 @@ export async function POST(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
-		const formData = await request.json();
-		const session = await getSession();
-		// if (!session.isLoggedin) {
-		// 	return Response.json({
-		// 		status: 401,
-		// 		error: 'Unauthorized',
-		// 	});
-		// }
 		const { id } = await params;
+		const formData = await request.json();
+
+		const session = await getSession();
+		if (!session.isLoggedin) {
+			return Response.json({
+				success: false,
+				status: 401,
+				error: 'Unauthorized',
+			});
+		}
+
 		await db.insert(consultation_session_summary).values({
 			consultationSessionId: parseInt(id),
-			consultantId: 1, //session.consultantId,
+			consultantId: session.consultantId,
 			title: formData.title,
 			summary: formData.summary,
 		});

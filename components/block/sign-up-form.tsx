@@ -37,7 +37,7 @@ export function SignUpForm() {
 					form.reset();
 					router.push('/sign-in');
 				} else {
-					toast.error(`signup failed: ${data.error}`);
+					toast.error(`signup failed: ${data?.error}`);
 				}
 			} catch (error) {
 				toast.error('An unexpected error occurred');

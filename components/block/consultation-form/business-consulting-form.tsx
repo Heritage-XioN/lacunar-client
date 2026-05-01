@@ -9,7 +9,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import { submitConsultationForm } from '@/actions/consultation';
 import { toast } from 'sonner';
 import { businessConsultingFormValidators } from '@/lib/zod-schemas';
 
@@ -39,13 +38,26 @@ export function BusinessConsultingForm() {
 
 		validators: businessConsultingFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await submitConsultationForm('business-consulting', value);
-			if (result.success) {
-				toast.success('Business Consulting Submitted Successfully!');
-				form.reset();
-				router.push('/consultation-form/success');
-			} else {
-				toast.error(`form Submission Failed: ${result.error}`);
+			//'business-consulting'
+			try {
+				const result = await fetch('/api/consultations', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						category: 'business-consulting',
+						formData: value,
+					}),
+				});
+				const data = await result.json();
+				if (data.success) {
+					toast.success('Business Consulting Submitted Successfully!');
+					form.reset();
+					router.push('/consultation-form/success');
+				} else {
+					toast.error(`form Submission Failed: ${data.error}`);
+				}
+			} catch (error) {
+				toast.error('an unexpected error occured');
 			}
 		},
 	});

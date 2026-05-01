@@ -1,4 +1,5 @@
 import { ClientDetailPage } from '@/components/template/client-data-page';
+import { verifyAuth } from '@/lib/dal';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export default async function ClientRoute({
 }: {
 	params: Promise<{ slug: string }>;
 }) {
+	const session = await verifyAuth();
 	const { slug } = await params;
 	return <ClientDetailPage slug={slug} />;
 }

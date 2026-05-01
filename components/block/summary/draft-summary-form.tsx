@@ -35,7 +35,7 @@ export function DraftSummaryForm({ id }: { id: string }) {
 					mutate(`/api/summary/${id}`);
 					form.reset();
 				} else {
-					toast.error(`Submission failed: ${data}`);
+					toast.error(`Submission failed: ${data?.error}`);
 				}
 			} catch (error) {
 				toast.error('An unexpected error occurred');

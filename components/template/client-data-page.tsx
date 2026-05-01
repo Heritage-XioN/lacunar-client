@@ -2,14 +2,17 @@
 
 import { ConsultationSessions } from '@/components/block/clients-consultation-sessions';
 import { clients, consultations } from '@/types/clients';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function ClientDetailPage({ slug }: { slug: string }) {
-	const { data: client } = useSWR<clients>(`/api/client/${slug}`, fetcher);
-	const { data: consultation } = useSWR<consultations[]>(
+	const { data: client } = useSWR<{ data: clients }>(
+		`/api/client/${slug}`,
+		fetcher,
+	);
+	const { data: consultation } = useSWR<{ data: consultations[] }>(
 		`/api/consultations/${slug}`,
 		fetcher,
 	);
@@ -21,16 +24,16 @@ export function ClientDetailPage({ slug }: { slug: string }) {
 						Client Profile
 					</p>
 					<h1 className='mt-2 font-serif text-5xl font-bold tracking-tight text-navy-900'>
-						{client?.fullName}
+						{client?.data.fullName}
 					</h1>
 					<div className='mt-6 flex flex-wrap items-center gap-8 text-sm text-slate-500'>
 						<div className='flex items-center gap-2'>
 							<Mail className='h-4 w-4 text-slate-400' />
-							<span>{client?.email}</span>
+							<span>{client?.data.email}</span>
 						</div>
 						<div className='flex items-center gap-2'>
 							<Phone className='h-4 w-4 text-slate-400' />
-							<span>{client?.phoneNumber}</span>
+							<span>{client?.data.phoneNumber}</span>
 						</div>
 					</div>
 				</div>
@@ -38,7 +41,7 @@ export function ClientDetailPage({ slug }: { slug: string }) {
 				<div className='mt-8'>
 					{/* Consultation Sessions */}
 					<div className='lg:col-span-8'>
-						<ConsultationSessions data={consultation || []} />
+						<ConsultationSessions data={consultation?.data || []} />
 					</div>
 				</div>
 			</main>

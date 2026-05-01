@@ -44,7 +44,7 @@ function SummaryTimelineSkeleton() {
 }
 
 export function SummaryTimeline({ id }: { id: string }) {
-	const { data, isLoading } = useSWR<TimelineEntry[]>(
+	const { data, isLoading } = useSWR<{ data: TimelineEntry[] }>(
 		`/api/summary/${id}`,
 		fetcher,
 	);
@@ -60,7 +60,7 @@ export function SummaryTimeline({ id }: { id: string }) {
 				</div>
 			) : (
 				<div className='space-y-0'>
-					{data.map((entry, idx) => (
+					{data.data.map((entry, idx) => (
 						<div key={idx} className='relative pb-10'>
 							{/* Timeline dot + line */}
 							<div className='absolute left-0 top-1.5 flex flex-col items-center'>
@@ -69,7 +69,7 @@ export function SummaryTimeline({ id }: { id: string }) {
 								) : (
 									<div className='h-2 w-2 rounded-full bg-slate-300' />
 								)}
-								{idx < data.length - 1 && (
+								{idx < data.data.length - 1 && (
 									<div
 										className='mt-2 w-px flex-1 bg-slate-100'
 										style={{ minHeight: '100%' }}

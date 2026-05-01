@@ -4,6 +4,7 @@ import {
 	consultation_sessions,
 	consultation_session_summary,
 } from '@/lib/db-schema';
+import { getSession } from '@/lib/session';
 import { eq, inArray } from 'drizzle-orm';
 
 export async function GET(
@@ -15,12 +16,16 @@ export async function GET(
 		const clientData = await db.query.clients.findFirst({
 			where: eq(clients.id, parseInt(id)),
 		});
-		return Response.json(clientData);
+		return Response.json({
+			success: true,
+			data: clientData,
+		});
 	} catch (error) {
 		return Response.json({
+			success: false,
+			status: 500,
 			error:
 				error instanceof Error ? error.cause : 'An unexpected error occurred.',
-			status: 500,
 		});
 	}
 }
@@ -32,6 +37,23 @@ export async function DELETE(
 	try {
 		const { id } = await params;
 		const clientId = parseInt(id);
+
+		const session = await getSession();
+		if (!session.isLoggedin) {
+			return Response.json({
+				success: false,
+				status: 401,
+				error: 'Unauthorized',
+			});
+		}
+
+		if (session.consultantRole !== 'admin') {
+			return Response.json({
+				success: false,
+				status: 401,
+				error: 'Only Admin can delete clients',
+			});
+		}
 
 		// First, find all consultation sessions for this client
 		const sessions = await db

@@ -4,10 +4,11 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build && pnpm db:push",
-		"start": "next start",
+		"build": "next build",
+		"start": "pnpm run db:push && pnpm run db:seed && next start",
 		"lint": "eslint",
 		"db:push": "drizzle-kit push",
+		"db:seed": "tsx lib/db-seed.ts",
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
