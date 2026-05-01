@@ -55,7 +55,7 @@ export const columns: ColumnDef<clients>[] = [
 						</DropdownMenuItem>
 						<AlertDialogDestructive
 							url={`/api/client/${id}`}
-							msg={`delete ${client}`}
+							msg={`Are you sure you want to delete ${client}`}
 						/>
 					</DropdownMenuContent>
 				</DropdownMenu>

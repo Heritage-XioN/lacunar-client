@@ -1,6 +1,6 @@
 'use client';
 
-import { Trash2Icon } from 'lucide-react';
+import { Trash2, Trash2Icon } from 'lucide-react';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -13,11 +13,10 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useSWRConfig } from 'swr';
 
-export function AlertDialogDestructive({
+export function DeleteIconDialogBtn({
 	url,
 	msg,
 }: {
@@ -28,7 +27,7 @@ export function AlertDialogDestructive({
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<button className='ml-2 text-red-500'>Delete</button>
+				<Trash2 className='h-4 w-4 text-red-500 cursor-pointer' />
 			</AlertDialogTrigger>
 			<AlertDialogContent size='sm'>
 				<AlertDialogHeader>

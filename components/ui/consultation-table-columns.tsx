@@ -97,7 +97,7 @@ export const columns: ColumnDef<consultations>[] = [
 						</DropdownMenuItem>
 						<AlertDialogDestructive
 							url={`/api/consultations/${id}`}
-							msg={`delete ${consulationCategory}`}
+							msg={`Are you sure you want to delete ${consulationCategory}`}
 						/>
 					</DropdownMenuContent>
 				</DropdownMenu>

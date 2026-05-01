@@ -1,6 +1,5 @@
 import { db } from '@/lib/db';
 import { clients, consultation_sessions } from '@/lib/db-schema';
-import { consultationTypes } from '@/lib/types';
 import { eq, and } from 'drizzle-orm';
 
 export async function POST(request: Request) {

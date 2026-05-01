@@ -2,16 +2,10 @@
 
 import { User, ChevronDown } from 'lucide-react';
 import useSWR from 'swr';
-
-interface TimelineEntry {
-	createdAt: string;
-	title: string;
-	summary: string;
-	consultant: consultants;
-}
-
 import { Skeleton } from '@/components/ui/skeleton';
-import { consultants } from '@/types/consultants';
+import { DeleteIconDialogBtn } from '@/components/ui/delete-icon-dialog-btn';
+import { TimelineEntry } from '@/types/summary';
+import { formatDateTime } from '@/lib/utils';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -81,9 +75,13 @@ export function SummaryTimeline({ id }: { id: string }) {
 							<div className='pl-8'>
 								{/* Top row: date + badge */}
 								<div className='flex flex-wrap items-center justify-between gap-2'>
-									<p className='text-[10px] font-semibold tracking-widest text-slate-500'>
-										{entry.createdAt}
+									<p className='text-[10px] font-semibold tracking-widest text-slate-500 uppercase'>
+										{formatDateTime(entry.createdAt)}
 									</p>
+									<DeleteIconDialogBtn
+										url={`/api/summary/${entry.id}`}
+										msg={`Are you sure you want to delete this summary?`}
+									/>
 								</div>
 
 								{/* Title */}

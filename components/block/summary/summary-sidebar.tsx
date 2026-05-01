@@ -4,15 +4,29 @@ import { Button } from '@/components/ui/button';
 import { DraftSummaryForm } from './draft-summary-form';
 import useSWR from 'swr';
 import { consultationSession } from '@/types/consultation-session';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+function IntakeResponsesSkeleton() {
+	return (
+		<div className='mt-6 space-y-5'>
+			{Array.from({ length: 4 }).map((_, i) => (
+				<div key={i}>
+					<Skeleton className='h-2 w-24' />
+					<Skeleton className='mt-2 h-4 w-3/4' />
+				</div>
+			))}
+		</div>
+	);
+}
+
 export function SummarySidebar({ id }: { id: string }) {
-	const { data } = useSWR<consultationSession[]>(
+	const { data } = useSWR<{ data: consultationSession[] }>(
 		`/api/consultations/${id}`,
 		fetcher,
 	);
-	const onBoardingDetails = data?.[0]?.onBoardingDetails;
+	const onBoardingDetails = data?.data?.[0]?.onBoardingDetails;
 	return (
 		<div className='lg:sticky lg:top-10'>
 			{/* Label */}
@@ -60,9 +74,7 @@ export function SummarySidebar({ id }: { id: string }) {
 						</div>
 					))
 				) : (
-					<div className='mt-6'>
-						<p className='text-xs text-slate-500'>Loading responses...</p>
-					</div>
+					<IntakeResponsesSkeleton />
 				)}
 			</div>
 		</div>
