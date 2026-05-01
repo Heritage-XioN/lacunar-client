@@ -1,4 +1,6 @@
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin-client';
+
+const supabaseAdmin = createSupabaseAdminClient();
 
 const EMAIL_ADDRESS = process.env.ADMIN_EMAIL_ADDRESS;
 const PASSWORD = process.env.ADMIN_PASSWORD;

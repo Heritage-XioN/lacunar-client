@@ -32,7 +32,7 @@ Create `.env` with the required values:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_SECRET_KEY=
 DATABASE_URL=
 
 ADMIN_EMAIL_ADDRESS=
@@ -44,7 +44,9 @@ ADMIN_ROLE=admin
 
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` may be replaced by `NEXT_PUBLIC_SUPABASE_ANON_KEY` if the project still uses anon keys.
 
-The service role key is server-only. Do not expose it through `NEXT_PUBLIC_*`.
+`SUPABASE_SECRET_KEY` is the server-only `sb_secret_...` API key from Supabase Settings > API Keys. Older projects may use the legacy `service_role` key as `SUPABASE_SERVICE_ROLE_KEY`, but new projects should prefer `SUPABASE_SECRET_KEY`.
+
+The secret/service-role key is server-only. Do not expose it through `NEXT_PUBLIC_*`.
 
 ## Auth And RLS
 
@@ -143,6 +145,8 @@ Seed or update the default admin user:
 pnpm run db:seed
 ```
 
+The seed script runs with `tsx` and imports the script-safe Supabase admin factory from `lib/supabase/admin-client.ts`. Next.js route handlers should continue importing `lib/supabase/admin.ts`, which keeps the `server-only` guard around privileged admin access.
+
 Open Drizzle Studio:
 
 ```bash
@@ -174,6 +178,6 @@ drizzle/              Generated Drizzle migrations and metadata
 lib/db-schema.ts      Drizzle schema, UUID columns, and RLS policies
 lib/db-seed.ts        Supabase-backed admin seed script
 lib/session.ts        Supabase-backed session helper
-lib/supabase/         Supabase server/admin clients
+lib/supabase/         Supabase server, admin, and admin-client
 types/                Shared TypeScript data shapes
 ```
