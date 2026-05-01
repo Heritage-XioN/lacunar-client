@@ -1,31 +1,33 @@
 import 'server-only';
-import { getIronSession } from 'iron-session';
-import { cookies } from 'next/headers';
 import { SessionData } from '@/types/session';
+import { createSupabaseServerClient } from './supabase/server';
 
-export const sessionOptions = {
-	password: process.env.RAND_KEY as string, //run openssl rand -base64 32 to generate a random pasaword
-	cookieName: 'session',
-	cookieOptions: {
-		httpOnly: process.env.COOKIE_HTTP_ONLY === 'true',
-		secure: process.env.NODE_ENV === 'production',
-		sameSite: process.env.COOKIE_SAME_SITE as 'lax' | 'strict' | 'none',
-		maxAge: Number(process.env.COOKIE_MAX_AGE),
-	},
-};
-
-//handles creating the session
 export async function getSession() {
-	const session = await getIronSession<SessionData>(
-		await cookies(),
-		sessionOptions
-	);
-	return session;
+	const supabase = await createSupabaseServerClient();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	if (!user) {
+		return {
+			isLoggedin: false,
+			consultantId: '',
+			consultantRole: '',
+		} satisfies SessionData;
+	}
+
+	return {
+		isLoggedin: true,
+		consultantId: user.id,
+		consultantRole:
+			typeof user.app_metadata.user_role === 'string'
+				? user.app_metadata.user_role
+				: 'consultant',
+	} satisfies SessionData;
 }
 
-//this should be used for logout
 export async function destroySession() {
 	'use server';
-	const session = await getSession();
-	session.destroy();
+	const supabase = await createSupabaseServerClient();
+	await supabase.auth.signOut();
 }

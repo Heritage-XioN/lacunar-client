@@ -1,6 +1,6 @@
 export type SessionData = {
 	isLoggedin: boolean;
-	token: string;
-	consultantId: number;
+	token?: string;
+	consultantId: string;
 	consultantRole: string;
 };
