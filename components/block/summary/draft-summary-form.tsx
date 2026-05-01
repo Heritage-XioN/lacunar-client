@@ -23,18 +23,22 @@ export function DraftSummaryForm({ id }: { id: string }) {
 		}),
 		validators: summaryFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await fetch(`/api/summary/${id}`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(value),
-			});
-			const data = await result.json();
-			if (data.success) {
-				toast.success('Summary submitted successfully!');
-				mutate(`/api/summary/${id}`);
-				form.reset();
-			} else {
-				toast.error(`Submission failed: ${data}`);
+			try {
+				const result = await fetch(`/api/summary/${id}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(value),
+				});
+				const data = await result.json();
+				if (data.success) {
+					toast.success('Summary submitted successfully!');
+					mutate(`/api/summary/${id}`);
+					form.reset();
+				} else {
+					toast.error(`Submission failed: ${data}`);
+				}
+			} catch (error) {
+				toast.error('An unexpected error occurred');
 			}
 		},
 	});

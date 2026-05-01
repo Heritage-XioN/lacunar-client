@@ -25,18 +25,22 @@ export function SignUpForm() {
 
 		validators: signUpFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await fetch('/api/auth/sign-up', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(value),
-			});
-			const data = await result.json();
-			if (data.success) {
-				toast.success('signup successful!');
-				form.reset();
-				router.push('/sign-in');
-			} else {
-				toast.error(`signup failed: ${data.error}`);
+			try {
+				const result = await fetch('/api/auth/sign-up', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(value),
+				});
+				const data = await result.json();
+				if (data.success) {
+					toast.success('signup successful!');
+					form.reset();
+					router.push('/sign-in');
+				} else {
+					toast.error(`signup failed: ${data.error}`);
+				}
+			} catch (error) {
+				toast.error('An unexpected error occurred');
 			}
 		},
 	});

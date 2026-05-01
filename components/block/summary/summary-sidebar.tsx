@@ -12,7 +12,7 @@ export function SummarySidebar({ id }: { id: string }) {
 		`/api/consultations/${id}`,
 		fetcher,
 	);
-	const onBoardingDetails = data?.[0].onBoardingDetails;
+	const onBoardingDetails = data?.[0]?.onBoardingDetails;
 	return (
 		<div className='lg:sticky lg:top-10'>
 			{/* Label */}

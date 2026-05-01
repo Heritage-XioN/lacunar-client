@@ -1,6 +1,6 @@
 'use client';
 
-import { User, Paperclip, ChevronDown, Mic } from 'lucide-react';
+import { User, ChevronDown } from 'lucide-react';
 import useSWR from 'swr';
 
 interface TimelineEntry {
@@ -48,6 +48,7 @@ export function SummaryTimeline({ id }: { id: string }) {
 		`/api/summary/${id}`,
 		fetcher,
 	);
+
 	return (
 		<div className='relative'>
 			{/* Timeline entries */}

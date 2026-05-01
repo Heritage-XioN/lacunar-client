@@ -39,19 +39,23 @@ export function ReviewPage() {
 
 		validators: ReviewFormValidators,
 		onSubmit: async ({ value }) => {
-			const result = await fetch('/api/review', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(value),
-			});
-			const data = await result.json();
-			if (data.success) {
-				toast.success('Review submitted successfully!');
-				mutate('/api/review');
-				form.reset();
-				router.push('/review/success');
-			} else {
-				toast.error(`Submission failed: ${data}`);
+			try {
+				const result = await fetch('/api/review', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(value),
+				});
+				const data = await result.json();
+				if (data.success) {
+					toast.success('Review submitted successfully!');
+					mutate('/api/review');
+					form.reset();
+					router.push('/review/success');
+				} else {
+					toast.error(`Submission failed: ${data}`);
+				}
+			} catch (error) {
+				toast.error('An unexpected error occurred');
 			}
 		},
 	});

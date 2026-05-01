@@ -13,6 +13,9 @@ import {
 import { Button } from './button';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { useSWRConfig } from 'swr';
+import { AlertDialogDestructive } from './delete-dialog-btn';
 
 export const columns: ColumnDef<clients>[] = [
 	{
@@ -33,8 +36,10 @@ export const columns: ColumnDef<clients>[] = [
 	},
 	{
 		id: 'actions',
-		cell: ({ row }) => {
+		cell: function ActionCell({ row }) {
 			const id = row.getValue('id') as string;
+			const client = row.getValue('fullName') as string;
+
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -45,12 +50,13 @@ export const columns: ColumnDef<clients>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Disable</DropdownMenuItem>
-						<DropdownMenuItem>
+						<DropdownMenuItem asChild>
 							<Link href={`/dashboard/clients/${id}`}>Consultations</Link>
 						</DropdownMenuItem>
-						<DropdownMenuItem className='text-red-600'>Delete</DropdownMenuItem>
+						<AlertDialogDestructive
+							url={`/api/client/${id}`}
+							msg={`delete ${client}`}
+						/>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);

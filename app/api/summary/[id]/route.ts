@@ -36,16 +36,16 @@ export async function POST(
 	try {
 		const formData = await request.json();
 		const session = await getSession();
-		if (!session.isLoggedin) {
-			return Response.json({
-				status: 401,
-				error: 'Unauthorized',
-			});
-		}
+		// if (!session.isLoggedin) {
+		// 	return Response.json({
+		// 		status: 401,
+		// 		error: 'Unauthorized',
+		// 	});
+		// }
 		const { id } = await params;
 		await db.insert(consultation_session_summary).values({
 			consultationSessionId: parseInt(id),
-			consultantId: session.consultantId,
+			consultantId: 1, //session.consultantId,
 			title: formData.title,
 			summary: formData.summary,
 		});

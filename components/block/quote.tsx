@@ -12,11 +12,12 @@ export function QuoteSection() {
 				{/* Quote */}
 				<blockquote>
 					<p className='text-xl leading-relaxed text-white sm:text-2xl lg:text-3xl'>
-						&ldquo;Where Strategy Meets Execution; it is a{' '}
+						&ldquo;{' '}
 						<em className='font-semibold italic text-gold-400 underline decoration-gold-500/40 underline-offset-4'>
-							philosophy of action
+							To work with Lacunar is to experience purpose in motion;
 						</em>{' '}
-						that defines nurturing missionaries with gratitude.&rdquo;
+						where ambition is refined, responsibility is embraced, and wealth
+						becomes a tool foor shaping Africas future .&rdquo;
 					</p>
 				</blockquote>
 

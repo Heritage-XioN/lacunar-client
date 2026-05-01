@@ -13,6 +13,8 @@ import { Button } from './button';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { consultants } from '@/types/consultants';
+import { toast } from 'sonner';
+import { AlertDialogDestructive } from './delete-dialog-btn';
 
 export const columns: ColumnDef<consultants>[] = [
 	{
@@ -33,8 +35,10 @@ export const columns: ColumnDef<consultants>[] = [
 	},
 	{
 		id: 'actions',
-		cell: ({ row }) => {
-			const id = parseFloat(row.getValue('id'));
+		cell: function ActionCell({ row }) {
+			const id = row.getValue('id') as string;
+			const consultant = row.getValue('fullName') as string;
+
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -45,9 +49,10 @@ export const columns: ColumnDef<consultants>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='end'>
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Disable</DropdownMenuItem>
-						<DropdownMenuItem className='text-red-600'>Delete</DropdownMenuItem>
+						<AlertDialogDestructive
+							url={`/api/consultant/${id}`}
+							msg={`delete ${consultant}`}
+						/>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);

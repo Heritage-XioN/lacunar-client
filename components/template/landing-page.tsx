@@ -14,7 +14,6 @@ export function LandingPage() {
 			<main>
 				<Hero />
 				<Foundation />
-				<Services />
 				<QuoteSection />
 				<ReviewsSection />
 				<CtaSection />

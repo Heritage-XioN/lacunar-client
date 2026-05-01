@@ -19,7 +19,7 @@ export const clients = pgTable('clients', {
 
 export const consultation_sessions = pgTable('consultation_sessions', {
 	id: serial('id').primaryKey(),
-	userId: integer('user_id').references(() => clients.id),
+	clientId: integer('client_id').references(() => clients.id),
 	category: varchar('category', { length: 256 }).notNull(),
 	status: varchar('status', { length: 256 }).notNull().default('pending'),
 	onBoardingDetails: jsonb('onBoarding_details').notNull(),
@@ -57,12 +57,14 @@ export const consultants = pgTable('consultants', {
 	id: serial('id').primaryKey(),
 	fullName: text('full_name').notNull(),
 	email: varchar('email', { length: 256 }).unique().notNull(),
+	role: varchar('role', { length: 256 }).notNull().default('consultant'),
 	phoneNumber: text('phone_no').notNull(),
 	passwordHash: text('password').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow(),
 });
 
+// Table relationships
 export const consultantRelations = relations(consultants, ({ many }) => ({
 	summaries: many(consultation_session_summary),
 }));
