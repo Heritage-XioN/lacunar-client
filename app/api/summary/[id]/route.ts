@@ -38,7 +38,9 @@ export async function GET(
 			success: false,
 			status: 500,
 			error:
-				error instanceof Error ? error.cause : 'An unexpected error occurred.',
+				error instanceof Error
+					? error.message
+					: 'An unexpected error occurred.',
 		});
 	}
 }
@@ -61,12 +63,14 @@ export async function POST(
 		}
 
 		const supabase = await createSupabaseServerClient();
-		const { error } = await supabase.from('consultation_session_summary').insert({
-			consultation_session_id: id,
-			consultant_id: session.consultantId,
-			title: formData.title,
-			summary: formData.summary,
-		});
+		const { error } = await supabase
+			.from('consultation_session_summary')
+			.insert({
+				consultation_session_id: id,
+				consultant_id: session.consultantId,
+				title: formData.title,
+				summary: formData.summary,
+			});
 
 		if (error) {
 			return Response.json({
@@ -82,7 +86,9 @@ export async function POST(
 			success: false,
 			status: 500,
 			error:
-				error instanceof Error ? error.cause : 'An unexpected error occurred.',
+				error instanceof Error
+					? error.message
+					: 'An unexpected error occurred.',
 		});
 	}
 }

@@ -4,14 +4,15 @@ export async function POST(request: Request) {
 	try {
 		const formData = await request.json();
 
-		const { data, error: authError } = await supabaseAdmin.auth.admin.createUser({
-			email: formData.email,
-			password: formData.password,
-			email_confirm: true,
-			app_metadata: {
-				user_role: 'consultant',
-			},
-		});
+		const { data, error: authError } =
+			await supabaseAdmin.auth.admin.createUser({
+				email: formData.email,
+				password: formData.password,
+				email_confirm: true,
+				app_metadata: {
+					user_role: 'consultant',
+				},
+			});
 
 		if (authError || !data.user) {
 			return Response.json({
@@ -49,7 +50,9 @@ export async function POST(request: Request) {
 			success: false,
 			status: 500,
 			error:
-				error instanceof Error ? error.cause : 'An unexpected error occurred.',
+				error instanceof Error
+					? error.message
+					: 'An unexpected error occurred.',
 		});
 	}
 }

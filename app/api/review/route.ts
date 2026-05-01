@@ -25,7 +25,9 @@ export async function GET() {
 			success: false,
 			status: 500,
 			error:
-				error instanceof Error ? error.cause : 'An unexpected error occurred.',
+				error instanceof Error
+					? error.message
+					: 'An unexpected error occurred.',
 		});
 	}
 }
@@ -57,7 +59,9 @@ export async function POST(request: Request) {
 			success: false,
 			status: 500,
 			error:
-				error instanceof Error ? error.cause : 'An unexpected error occurred.',
+				error instanceof Error
+					? error.message
+					: 'An unexpected error occurred.',
 		});
 	}
 }
