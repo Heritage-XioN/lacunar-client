@@ -1,9 +1,9 @@
 export type consultants = {
-	id: number;
+	id: string;
 	fullName: string;
 	email: string;
+	role: string;
 	phoneNumber: string;
-	passwordHash: string;
 	createdAt: string;
 	updatedAt: string;
 };

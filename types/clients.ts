@@ -1,5 +1,5 @@
 export type clients = {
-	id: number;
+	id: string;
 	fullName: string;
 	email: string;
 	phoneNumber: string;
@@ -7,11 +7,11 @@ export type clients = {
 };
 
 export type consultations = {
-	id: number;
-	userId: number;
+	id: string;
+	clientId: string;
 	category: string;
 	status: string;
-	onBoardingDetails: string;
+	onBoardingDetails: unknown;
 	createdAt: string;
 	updatedAt: string;
 };

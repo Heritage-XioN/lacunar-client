@@ -99,7 +99,7 @@ export function SummaryTimeline({ id }: { id: string }) {
 									<div className='flex items-center gap-2'>
 										<User className='h-3.5 w-3.5 text-slate-500' />
 										<span className='text-xs text-slate-600'>
-											{entry.consultant.fullName}
+											{entry.consultant?.fullName ?? 'Unknown consultant'}
 										</span>
 									</div>
 								</div>

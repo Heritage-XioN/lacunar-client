@@ -1,9 +1,9 @@
 import { consultants } from './consultants';
 
 export interface TimelineEntry {
-	id: number;
+	id: string;
 	createdAt: string;
 	title: string;
 	summary: string;
-	consultant: consultants;
+	consultant: consultants | null;
 }
