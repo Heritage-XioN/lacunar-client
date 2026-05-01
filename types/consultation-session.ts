@@ -1,9 +1,9 @@
 export type consultationSession = {
-	id: number;
-	userId: number;
+	id: string;
+	clientId: string;
 	category: string;
 	status: string;
-	onBoardingDetails: {};
+	onBoardingDetails: Record<string, unknown>;
 	createdAt: string;
 	updatedAt: string;
 };

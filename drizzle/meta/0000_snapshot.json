@@ -1,0 +1,541 @@
+{
+  "id": "046ab56c-f7ee-4b47-8fdf-acd25eb0d7b1",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.clients": {
+      "name": "clients",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_no": {
+          "name": "phone_no",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "clients_email_unique": {
+          "name": "clients_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {
+        "staff_select_clients": {
+          "name": "staff_select_clients",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "staff_insert_clients": {
+          "name": "staff_insert_clients",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "staff_update_clients": {
+          "name": "staff_update_clients",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')",
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "admin_delete_clients": {
+          "name": "admin_delete_clients",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.consultants": {
+      "name": "consultants",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'consultant'"
+        },
+        "phone_no": {
+          "name": "phone_no",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "consultants_email_unique": {
+          "name": "consultants_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {
+        "staff_select_consultants": {
+          "name": "staff_select_consultants",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "admin_insert_consultants": {
+          "name": "admin_insert_consultants",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        },
+        "admin_update_consultants": {
+          "name": "admin_update_consultants",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'",
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        },
+        "admin_delete_consultants": {
+          "name": "admin_delete_consultants",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.consultation_session_summary": {
+      "name": "consultation_session_summary",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "consultation_session_id": {
+          "name": "consultation_session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consultant_id": {
+          "name": "consultant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "consultation_session_summary_consultation_session_id_consultation_sessions_id_fk": {
+          "name": "consultation_session_summary_consultation_session_id_consultation_sessions_id_fk",
+          "tableFrom": "consultation_session_summary",
+          "tableTo": "consultation_sessions",
+          "columnsFrom": [
+            "consultation_session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "consultation_session_summary_consultant_id_consultants_id_fk": {
+          "name": "consultation_session_summary_consultant_id_consultants_id_fk",
+          "tableFrom": "consultation_session_summary",
+          "tableTo": "consultants",
+          "columnsFrom": [
+            "consultant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "staff_select_consultation_session_summary": {
+          "name": "staff_select_consultation_session_summary",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "staff_insert_consultation_session_summary": {
+          "name": "staff_insert_consultation_session_summary",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "staff_update_consultation_session_summary": {
+          "name": "staff_update_consultation_session_summary",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')",
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "admin_delete_consultation_session_summary": {
+          "name": "admin_delete_consultation_session_summary",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.consultation_sessions": {
+      "name": "consultation_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "client_id": {
+          "name": "client_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "onBoarding_details": {
+          "name": "onBoarding_details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "consultation_sessions_client_id_clients_id_fk": {
+          "name": "consultation_sessions_client_id_clients_id_fk",
+          "tableFrom": "consultation_sessions",
+          "tableTo": "clients",
+          "columnsFrom": [
+            "client_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "staff_select_consultation_sessions": {
+          "name": "staff_select_consultation_sessions",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "staff_insert_consultation_sessions": {
+          "name": "staff_insert_consultation_sessions",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "staff_update_consultation_sessions": {
+          "name": "staff_update_consultation_sessions",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')",
+          "withCheck": "(auth.jwt() -> 'app_metadata' ->> 'user_role') in ('admin', 'consultant')"
+        },
+        "admin_delete_consultation_sessions": {
+          "name": "admin_delete_consultation_sessions",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.reviews": {
+      "name": "reviews",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "engagement_quality": {
+          "name": "engagement_quality",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fullName": {
+          "name": "fullName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organisation": {
+          "name": "organisation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "social": {
+          "name": "social",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "feedback": {
+          "name": "feedback",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "public_select_reviews": {
+          "name": "public_select_reviews",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "anon",
+            "authenticated"
+          ],
+          "using": "true"
+        },
+        "public_insert_reviews": {
+          "name": "public_insert_reviews",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "anon",
+            "authenticated"
+          ],
+          "withCheck": "true"
+        },
+        "admin_delete_reviews": {
+          "name": "admin_delete_reviews",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(auth.jwt() -> 'app_metadata' ->> 'user_role') = 'admin'"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

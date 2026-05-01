@@ -1,11 +1,6 @@
-import { db } from '@/lib/db';
-import {
-	clients,
-	consultation_sessions,
-	consultation_session_summary,
-} from '@/lib/db-schema';
+import { mapClient } from '@/lib/db-row-mappers';
 import { getSession } from '@/lib/session';
-import { eq, inArray } from 'drizzle-orm';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export async function GET(
 	request: Request,
@@ -13,12 +8,33 @@ export async function GET(
 ) {
 	try {
 		const { id } = await params;
-		const clientData = await db.query.clients.findFirst({
-			where: eq(clients.id, parseInt(id)),
-		});
+		const session = await getSession();
+		if (!session.isLoggedin) {
+			return Response.json({
+				success: false,
+				status: 401,
+				error: 'Unauthorized',
+			});
+		}
+
+		const supabase = await createSupabaseServerClient();
+		const { data, error } = await supabase
+			.from('clients')
+			.select('*')
+			.eq('id', id)
+			.single();
+
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
+		}
+
 		return Response.json({
 			success: true,
-			data: clientData,
+			data: mapClient(data),
 		});
 	} catch (error) {
 		return Response.json({
@@ -36,7 +52,6 @@ export async function DELETE(
 ) {
 	try {
 		const { id } = await params;
-		const clientId = parseInt(id);
 
 		const session = await getSession();
 		if (!session.isLoggedin) {
@@ -55,31 +70,16 @@ export async function DELETE(
 			});
 		}
 
-		// First, find all consultation sessions for this client
-		const sessions = await db
-			.select()
-			.from(consultation_sessions)
-			.where(eq(consultation_sessions.clientId, clientId));
+		const supabase = await createSupabaseServerClient();
+		const { error } = await supabase.from('clients').delete().eq('id', id);
 
-		const sessionIds = sessions.map((s) => s.id);
-		if (sessionIds.length > 0) {
-			// Delete related summaries
-			await db
-				.delete(consultation_session_summary)
-				.where(
-					inArray(
-						consultation_session_summary.consultationSessionId,
-						sessionIds,
-					),
-				);
-			// Delete related sessions
-			await db
-				.delete(consultation_sessions)
-				.where(eq(consultation_sessions.clientId, clientId));
+		if (error) {
+			return Response.json({
+				success: false,
+				status: 500,
+				error: error.message,
+			});
 		}
-
-		// Delete client
-		await db.delete(clients).where(eq(clients.id, clientId));
 
 		return Response.json({ success: true });
 	} catch (error) {

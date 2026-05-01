@@ -1,7 +1,6 @@
-import { db } from '@/lib/db'; // Your drizzle instance
-import { consultants } from '@/lib/db-schema';
-import bcrypt from 'bcryptjs';
-import { eq } from 'drizzle-orm';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin-client';
+
+const supabaseAdmin = createSupabaseAdminClient();
 
 const EMAIL_ADDRESS = process.env.ADMIN_EMAIL_ADDRESS;
 const PASSWORD = process.env.ADMIN_PASSWORD;
@@ -22,22 +21,68 @@ async function seed() {
 	}
 	try {
 		console.log('Seeding default user...');
-		const hashedPassword = await bcrypt.hash(PASSWORD, 10);
-		await db
-			.insert(consultants)
-			.values({
-				fullName: DEFAULT_FULL_NAME,
-				email: EMAIL_ADDRESS,
-				phoneNumber: DEFAULT_PHONE_NUMBER,
-				passwordHash: hashedPassword,
-				role: DEFAULT_ROLE,
-			})
-			.onConflictDoUpdate({
-				target: consultants.email,
-				set: {
+
+		const { data: existingProfile, error: existingProfileError } =
+			await supabaseAdmin
+				.from('consultants')
+				.select('id')
+				.eq('email', EMAIL_ADDRESS)
+				.maybeSingle();
+
+		if (existingProfileError) {
+			throw existingProfileError;
+		}
+
+		let userId = existingProfile?.id as string | undefined;
+
+		if (!userId) {
+			const { data: createdUser, error: createUserError } =
+				await supabaseAdmin.auth.admin.createUser({
 					email: EMAIL_ADDRESS,
+					password: PASSWORD,
+					email_confirm: true,
+					app_metadata: {
+						user_role: DEFAULT_ROLE,
+					},
+				});
+
+			if (createUserError || !createdUser.user) {
+				throw createUserError ?? new Error('Failed to create admin auth user');
+			}
+
+			userId = createdUser.user.id;
+		} else {
+			const { error: updateUserError } =
+				await supabaseAdmin.auth.admin.updateUserById(userId, {
+					email: EMAIL_ADDRESS,
+					password: PASSWORD,
+					app_metadata: {
+						user_role: DEFAULT_ROLE,
+					},
+				});
+
+			if (updateUserError) {
+				throw updateUserError;
+			}
+		}
+
+		const { error: upsertProfileError } = await supabaseAdmin
+			.from('consultants')
+			.upsert(
+				{
+					id: userId,
+					full_name: DEFAULT_FULL_NAME,
+					email: EMAIL_ADDRESS,
+					phone_no: DEFAULT_PHONE_NUMBER,
+					role: DEFAULT_ROLE,
 				},
-			});
+				{ onConflict: 'email' },
+			);
+
+		if (upsertProfileError) {
+			throw upsertProfileError;
+		}
+
 		console.log('Default user created/updated');
 	} catch (error) {
 		console.error('failed to seed default user!:', error);
