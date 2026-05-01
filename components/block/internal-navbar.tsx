@@ -14,7 +14,9 @@ interface InternalNavbarProps {
 	activeLink?: string;
 }
 
-export function InternalNavbar({ activeLink = 'Dashboard' }: InternalNavbarProps) {
+export function InternalNavbar({
+	activeLink = 'Dashboard',
+}: InternalNavbarProps) {
 	return (
 		<header className='bg-slate-50'>
 			<nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-10 lg:px-16'>
@@ -37,7 +39,7 @@ export function InternalNavbar({ activeLink = 'Dashboard' }: InternalNavbarProps
 								className={cn(
 									'text-sm transition-colors duration-200',
 									link.label === activeLink
-										? 'font-semibold text-navy-900 underline underline-offset-[8px] decoration-navy-900 decoration-2'
+										? 'font-semibold text-navy-900 underline underline-offset-8 decoration-navy-900 decoration-2'
 										: 'text-slate-500 hover:text-navy-900',
 								)}
 							>
