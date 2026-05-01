@@ -3,11 +3,11 @@ import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { SessionData } from '@/types/session';
 
-const sessionOptions = {
+export const sessionOptions = {
 	password: process.env.RAND_KEY as string, //run openssl rand -base64 32 to generate a random pasaword
 	cookieName: 'session',
 	cookieOptions: {
-		httpOnly: process.env.COOKIE_HTTP_ONLY,
+		httpOnly: process.env.COOKIE_HTTP_ONLY === 'true',
 		secure: process.env.NODE_ENV === 'production',
 		sameSite: process.env.COOKIE_SAME_SITE as 'lax' | 'strict' | 'none',
 		maxAge: Number(process.env.COOKIE_MAX_AGE),
