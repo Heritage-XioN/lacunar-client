@@ -51,7 +51,7 @@ export function TpConsultantForm() {
 				});
 				const data = await result.json();
 				if (data.success) {
-					toast.success('Form submitted Successfully!');
+					toast.success('Form submitted successfully!');
 					form.reset();
 					router.push('/consultation-form/success');
 				} else {

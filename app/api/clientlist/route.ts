@@ -1,6 +1,7 @@
 import { mapClient } from '@/lib/db-row-mappers';
 import { getSession } from '@/lib/session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import * as Sentry from '@sentry/nextjs';
 
 export async function GET() {
 	try {
@@ -20,10 +21,11 @@ export async function GET() {
 			.order('created_at', { ascending: false });
 
 		if (error) {
+			Sentry.captureException(new Error(error.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: error.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
@@ -32,13 +34,11 @@ export async function GET() {
 			data: data.map(mapClient),
 		});
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }

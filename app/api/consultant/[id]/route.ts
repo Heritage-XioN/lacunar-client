@@ -1,5 +1,6 @@
 import { getSession } from '@/lib/session';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import * as Sentry from '@sentry/nextjs';
 
 export async function DELETE(
 	request: Request,
@@ -38,32 +39,32 @@ export async function DELETE(
 			.eq('id', id);
 
 		if (profileError) {
+			Sentry.captureException(new Error(profileError.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: profileError.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
 
 		if (authError) {
+			Sentry.captureException(new Error(authError.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: authError.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		return Response.json({ success: true });
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }
