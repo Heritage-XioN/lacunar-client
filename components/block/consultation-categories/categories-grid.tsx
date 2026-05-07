@@ -103,12 +103,12 @@ export function CategoriesGrid() {
 						href='/consultation-form/government-ngo-consulting'
 					/>
 					<CategoryCard
-						title='Our Training Program for Consultants'
+						title='Join Our Student Finance Community'
 						description='We train young people in Nigeria to become consultants and smart investors Through finance clubs and student groups, 
 						members meet every week with experienced mentors. They learn how to think, solve real problems, 
 						and understand the capital market. Our goal is simple: build a strong community of future consultants who can create real value.'
 						icon={<ShieldCheck className='h-5 w-5' />}
-						href='/consultation-form/lacunar-business-model'
+						href='/consultation-form/tp-consultants-form'
 					/>
 					<Link
 						href='/consultation-form/investment-and-capital-advisory'

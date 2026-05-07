@@ -135,6 +135,18 @@ export const governmentNgoSchema = z.object({
 export const governmentNgoFormValidators =
 	createFormValidators(governmentNgoSchema);
 
+export const TpConsultantsSchema = z.object({
+	schoolOrTeamName: requiredSelection('School or team name'),
+	objectives: requiredText('Objectives'),
+	progressReport: requiredText('Progress report'),
+	fullName: requiredText('Full name'),
+	email: requiredEmail,
+	phoneNumber: requiredPhone,
+});
+
+export const TpConsultantsFormValidators =
+	createFormValidators(TpConsultantsSchema);
+
 export const digitalDiscoverySchema = z.object({
 	primaryIntent: requiredSelections('primary intent'),
 	financialStress: requiredSelection('Financial stress level'),
