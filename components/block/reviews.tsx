@@ -47,7 +47,7 @@ export function ReviewPage() {
 				});
 				const data = await result.json();
 				if (data.success) {
-					toast.success('Review submitted successfully!');
+					toast.success('Form submitted successfully!');
 					mutate('/api/review');
 					form.reset();
 					router.push('/review/success');
