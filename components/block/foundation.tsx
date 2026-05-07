@@ -59,7 +59,10 @@ export function Foundation({
 		const handleVisibilityChange = () => {
 			if (document.visibilityState === 'hidden') {
 				pauseVideo();
-			} else if (document.visibilityState === 'visible' && isVisibleRef.current) {
+			} else if (
+				document.visibilityState === 'visible' &&
+				isVisibleRef.current
+			) {
 				playVideo();
 			}
 		};
@@ -100,9 +103,9 @@ export function Foundation({
 						</h2>
 
 						<p className='max-w-md text-sm leading-relaxed text-slate-500'>
-							Explore the thinking behind our work and our mission to empower
-							institutions. Relentless pursuit, methodological with
-							micro-solutions to build system-driven infrastructure.
+							We believe organizations can work better and achieve more. Our
+							goal is to help them grow by fixing problems step by step and
+							building strong systems that last.
 						</p>
 					</div>
 
@@ -142,4 +145,3 @@ export function Foundation({
 		</section>
 	);
 }
-

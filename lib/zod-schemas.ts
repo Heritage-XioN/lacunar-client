@@ -93,21 +93,17 @@ export const sustainingFamilyWealthFormValidators = createFormValidators(
 );
 
 export const personalFinanceSchema = z.object({
-	primaryCatalyst: requiredSelection('Primary catalyst'),
+	primaryReason: requiredSelection('Primary reason'),
 	financialStress: requiredSelection('Financial stress level'),
 	monthlyNetIncome: nonNegativeNumber('Monthly net income'),
 	incomeCurrency: requiredSelection('Income currency'),
 	monthlyCoreExpenses: nonNegativeNumber('Monthly core expenses'),
-	trackingMethodologies: requiredSelections('tracking methodology'),
 	activeAssets: requiredSelections('active asset'),
 	debtProfile: requiredSelections('debt type'),
-	financialReality: minText('Financial reality', 2),
+	investmentReality: minText('Financial reality', 2),
 	timeHorizon: requiredSelection('Time horizon'),
 	vision730Day: requiredText('730-day vision'),
 	desiredOutcomes: exactSelections('desired outcome', 3),
-	operationalObstacle: requiredSelection('Primary operational obstacle'),
-	decisionConfidence: requiredSelection('Decision confidence'),
-	successDefinition: requiredText('Success definition'),
 	fullName: requiredText('Full name'),
 	email: requiredEmail,
 	phoneNumber: requiredPhone,

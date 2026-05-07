@@ -9,11 +9,11 @@ export function CategoriesCta() {
 
 			<div className='relative z-10 mx-auto max-w-4xl'>
 				<p className='text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-400'>
-					Finality in Design
+					Getting It Right
 				</p>
-				<h2 className='mt-8 font-serif text-4xl font-normal text-white sm:text-5xl md:text-6xl'>
-					Precision is the ultimate <br className='hidden sm:block' />
-					<span className='italic'>sophistication.</span>
+				<h2 className='times mt-8 text-4xl font-normal text-gold-500 sm:text-5xl md:text-6xl'>
+					Simple, clear, and done properly <br className='hidden sm:block' />
+					that’s what makes things work best.
 				</h2>
 			</div>
 

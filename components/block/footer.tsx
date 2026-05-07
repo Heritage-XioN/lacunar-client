@@ -1,16 +1,15 @@
 import Link from 'next/link';
 
 const navigation = [
-	{ label: 'Services', href: '/services' },
 	{ label: 'Reviews', href: '/review' },
-	{ label: 'Case Studies', href: '/case-studies' },
+	// { label: 'Case Studies', href: '/case-studies' },
 	{ label: 'Consultant Login', href: '/sign-in' },
 ];
 
 const connect = [
 	{ label: 'LinkedIn', href: '#' },
-	{ label: 'Privacy Policy', href: '/privacy-policy' },
-	{ label: 'Terms of Service', href: '/terms-of-service' },
+	// { label: 'Privacy Policy', href: '/privacy-policy' },
+	// { label: 'Terms of Service', href: '/terms-of-service' },
 ];
 
 export function Footer() {
@@ -24,9 +23,9 @@ export function Footer() {
 							LACUNAR CONSULTING FIRM
 						</p>
 						<p className='mt-4 max-w-md text-sm leading-relaxed text-slate-500'>
-							Curated execution for the modern institution. We provide the
-							architectural framework for high-stakes decisions and sustainable
-							legacy building.
+							I believe structure is what makes productivity predictable, and
+							that's the core service we sell to individuals, businesses and the
+							government.
 						</p>
 					</div>
 
