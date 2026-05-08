@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import * as Sentry from '@sentry/nextjs';
 
 export async function POST(request: Request) {
 	try {
@@ -11,10 +12,11 @@ export async function POST(request: Request) {
 			.maybeSingle();
 
 		if (existingUserError) {
+			Sentry.captureException(new Error(existingUserError.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: existingUserError.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
@@ -32,10 +34,11 @@ export async function POST(request: Request) {
 				.single();
 
 			if (newUserError) {
+				Sentry.captureException(new Error(newUserError.message));
 				return Response.json({
 					success: false,
 					status: 500,
-					error: newUserError.message,
+					error: 'An internal server error occurred.',
 				});
 			}
 
@@ -55,10 +58,11 @@ export async function POST(request: Request) {
 				.maybeSingle();
 
 		if (existingConsultationError) {
+			Sentry.captureException(new Error(existingConsultationError.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: existingConsultationError.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
@@ -73,10 +77,11 @@ export async function POST(request: Request) {
 				.eq('client_id', clientId);
 
 			if (error) {
+				Sentry.captureException(new Error(error.message));
 				return Response.json({
 					success: false,
 					status: 500,
-					error: error.message,
+					error: 'An internal server error occurred.',
 				});
 			}
 		} else {
@@ -90,22 +95,21 @@ export async function POST(request: Request) {
 				});
 
 			if (error) {
+				Sentry.captureException(new Error(error.message));
 				return Response.json({
 					success: false,
 					status: 500,
-					error: error.message,
+					error: 'An internal server error occurred.',
 				});
 			}
 		}
 		return Response.json({ success: true });
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }

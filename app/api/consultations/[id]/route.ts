@@ -1,6 +1,7 @@
 import { mapConsultationSession } from '@/lib/db-row-mappers';
 import { getSession } from '@/lib/session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import * as Sentry from '@sentry/nextjs';
 
 export async function GET(
 	request: Request,
@@ -25,10 +26,11 @@ export async function GET(
 			.order('created_at', { ascending: false });
 
 		if (error) {
+			Sentry.captureException(new Error(error.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: error.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
@@ -37,13 +39,11 @@ export async function GET(
 			success: true,
 		});
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }
@@ -71,22 +71,21 @@ export async function PUT(
 			.eq('id', id);
 
 		if (error) {
+			Sentry.captureException(new Error(error.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: error.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		return Response.json({ success: true });
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }
@@ -122,22 +121,21 @@ export async function DELETE(
 			.eq('id', id);
 
 		if (error) {
+			Sentry.captureException(new Error(error.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: error.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		return Response.json({ success: true });
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }

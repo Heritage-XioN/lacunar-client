@@ -2,10 +2,20 @@ import { Button } from '../ui/button';
 import { StatCard } from '../ui/stat-card';
 
 const stats = [
-	{ value: 'Millions of naira in assets under management.', label: 'Substantial Portfolio Growth' },
-	{ value: 'largest student investment societies in Nigeria', label: 'Institutional Foundation' },
-	{ value: 'worlds leading finance certification body (CFA Institute)', label: 'Premier Professional Alignment' },
-	{ value: 'international community of finance professionals and consultants', label: 'Global Expert Network' },
+	{
+		value: 'Millions of naira in managed assets and investment activity.',
+		label: 'Substantial Portfolio Growth',
+	},
+	{
+		value:
+			'Connected to some of Nigeria’s largest student investment societies.',
+		label: 'Institutional Foundation',
+	},
+	{
+		value:
+			'Access to an international network of finance professionals and consultants.',
+		label: 'Global Expert Network',
+	},
 ];
 
 export function CtaSection() {
@@ -13,7 +23,6 @@ export function CtaSection() {
 		<section className='bg-navy-950 py-20 sm:py-28'>
 			<div className='mx-auto max-w-7xl px-6 sm:px-10 lg:px-16'>
 				<div className='grid gap-12 lg:grid-cols-2 lg:items-center'>
-
 					{/* Left — Text + CTAs */}
 					<div className='space-y-6'>
 						<h2 className='text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:text-5xl'>
@@ -23,7 +32,7 @@ export function CtaSection() {
 						<p className='max-w-lg text-base leading-relaxed text-slate-400'>
 							Lets help you build assets that funds your lifestyle
 						</p>
-						<div className='flex flex-col gap-4 pt-2 sm:flex-row'>
+						{/* <div className='flex flex-col gap-4 pt-2 sm:flex-row'>
 							<Button
 								variant='primary'
 								className='px-7 py-3 text-sm'
@@ -38,7 +47,7 @@ export function CtaSection() {
 							>
 								Inquire Directly
 							</Button>
-						</div>
+						</div> */}
 					</div>
 
 					{/* Right — Stat cards */}

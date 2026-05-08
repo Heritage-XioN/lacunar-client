@@ -1,5 +1,6 @@
 import { mapReview } from '@/lib/db-row-mappers';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import * as Sentry from '@sentry/nextjs';
 
 export async function GET() {
 	try {
@@ -11,23 +12,22 @@ export async function GET() {
 			.limit(6);
 
 		if (error) {
+			Sentry.captureException(new Error(error.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: error.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		return Response.json({ data: data.map(mapReview), success: true });
 	} catch (error) {
 		console.error('Error fetching editorial reviews:', error);
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }
@@ -46,22 +46,21 @@ export async function POST(request: Request) {
 		});
 
 		if (error) {
+			Sentry.captureException(new Error(error.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: error.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		return Response.json({ success: true });
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }

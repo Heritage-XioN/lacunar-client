@@ -39,7 +39,7 @@ interface personal {
 	trackingMethodologies: string[];
 	activeAssets: string[];
 	debtProfile: string[];
-	financialReality: string;
+	investmentReality: string;
 	timeHorizon: string;
 	vision730Day: string;
 	desiredOutcomes: string[];

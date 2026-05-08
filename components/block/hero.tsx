@@ -55,13 +55,13 @@ export function Hero() {
 							</Link>
 						</Button>
 
-						<Button
+						{/* <Button
 							variant='outline'
 							className='px-7 py-3 text-sm'
 							type='button'
 						>
 							View Case Studies
-						</Button>
+						</Button> */}
 					</div>
 				</div>
 			</div>

@@ -31,7 +31,7 @@ export function DraftSummaryForm({ id }: { id: string }) {
 				});
 				const data = await result.json();
 				if (data.success) {
-					toast.success('Summary submitted successfully!');
+					toast.success('Form submitted successfully!');
 					mutate(`/api/summary/${id}`);
 					form.reset();
 				} else {
