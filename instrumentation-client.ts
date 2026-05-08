@@ -13,28 +13,28 @@ Sentry.init({
 	dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
 	// Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-	tracesSampleRate: 1,
+	tracesSampleRate: 0.1,
 	// Enable logs to be sent to Sentry
 	enableLogs: true,
 
 	// Enable sending user PII (Personally Identifiable Information)
 	// https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
-	sendDefaultPii: true,
+	sendDefaultPii: false,
 });
-
-datadogRum.init({
-	applicationId: DATADOG_APPLICATION_ID as string,
-	clientToken: DATADOG_CLIENT_TOKEN as string,
-	site: DATADOG_SITE as string,
-	service: 'lacunar-client',
-	env: process.env.NODE_ENV,
-	version: '1.0.0',
-	sessionSampleRate: 100,
-	sessionReplaySampleRate: 20, // Keep this low or 0 if using Sentry Replay
-	trackUserInteractions: true,
-	trackResources: true,
-	trackLongTasks: true,
-	defaultPrivacyLevel: 'mask-user-input',
-});
-
+if (DATADOG_APPLICATION_ID && DATADOG_CLIENT_TOKEN && DATADOG_SITE) {
+	datadogRum.init({
+		applicationId: DATADOG_APPLICATION_ID,
+		clientToken: DATADOG_CLIENT_TOKEN,
+		site: DATADOG_SITE,
+		service: 'lacunar-client',
+		env: process.env.NODE_ENV,
+		version: '1.0.0',
+		sessionSampleRate: 100,
+		sessionReplaySampleRate: 5, // Keep this low or 0 if using Sentry Replay
+		trackUserInteractions: true,
+		trackResources: true,
+		trackLongTasks: true,
+		defaultPrivacyLevel: 'mask-user-input',
+	});
+}
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
