@@ -6,6 +6,7 @@ import { Navbar } from '../block/navbar';
 import { QuoteSection } from '../block/quote';
 import { Services } from '../block/services';
 import { ReviewsSection } from '../block/reviews-section';
+import { OurPeople } from '../block/our-people';
 
 export function LandingPage() {
 	return (
@@ -17,6 +18,7 @@ export function LandingPage() {
 				<QuoteSection />
 				<ReviewsSection />
 				<CtaSection />
+				{/* <OurPeople /> */}
 			</main>
 			<Footer />
 		</div>

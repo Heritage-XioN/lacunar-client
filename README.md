@@ -12,6 +12,7 @@ The app uses:
 - Drizzle ORM and Drizzle Kit for schema and migrations
 - TanStack Form and Zod for form validation
 - SWR for client-side API fetching
+- Sentry and Datadog RUM for error monitoring and observability
 
 ## App Surface
 
@@ -40,6 +41,13 @@ ADMIN_PASSWORD=
 ADMIN_FULL_NAME=
 ADMIN_PHONE_NUMBER=
 ADMIN_ROLE=admin
+
+NEXT_PUBLIC_SENTRY_DSN=
+SENTRY_AUTH_TOKEN=
+
+NEXT_PUBLIC_DATADOG_APPLICATION_ID=
+NEXT_PUBLIC_DATADOG_CLIENT_TOKEN=
+NEXT_PUBLIC_DATADOG_SITE=
 ```
 
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` may be replaced by `NEXT_PUBLIC_SUPABASE_ANON_KEY` if the project still uses anon keys.
@@ -47,6 +55,18 @@ ADMIN_ROLE=admin
 `SUPABASE_SECRET_KEY` is the server-only `sb_secret_...` API key from Supabase Settings > API Keys. Older projects may use the legacy `service_role` key as `SUPABASE_SERVICE_ROLE_KEY`, but new projects should prefer `SUPABASE_SECRET_KEY`.
 
 The secret/service-role key is server-only. Do not expose it through `NEXT_PUBLIC_*`.
+
+## Monitoring And Observability
+
+Sentry is configured through `instrumentation.ts`, `instrumentation-client.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts`, and `next.config.ts`. `NEXT_PUBLIC_SENTRY_DSN` enables browser-side reporting, while `SENTRY_AUTH_TOKEN` is used by the Sentry build plugin when uploading source maps.
+
+Datadog RUM is initialized from `instrumentation-client.ts` and uses:
+
+- `NEXT_PUBLIC_DATADOG_APPLICATION_ID`
+- `NEXT_PUBLIC_DATADOG_CLIENT_TOKEN`
+- `NEXT_PUBLIC_DATADOG_SITE`
+
+Because these values are consumed in the browser, use Datadog client credentials intended for public RUM usage.
 
 ## Auth And RLS
 

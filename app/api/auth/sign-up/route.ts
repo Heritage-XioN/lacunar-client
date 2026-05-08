@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import * as Sentry from '@sentry/nextjs';
 
 export async function POST(request: Request) {
 	try {
@@ -37,22 +38,21 @@ export async function POST(request: Request) {
 
 		if (profileError) {
 			await supabaseAdmin.auth.admin.deleteUser(data.user.id);
+			Sentry.captureException(new Error(profileError.message));
 			return Response.json({
 				success: false,
 				status: 500,
-				error: profileError.message,
+				error: 'An internal server error occurred.',
 			});
 		}
 
 		return Response.json({ success: true });
 	} catch (error) {
+		Sentry.captureException(error);
 		return Response.json({
 			success: false,
 			status: 500,
-			error:
-				error instanceof Error
-					? error.message
-					: 'An unexpected error occurred.',
+			error: 'An unexpected application error occurred.',
 		});
 	}
 }

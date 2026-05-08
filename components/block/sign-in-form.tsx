@@ -34,7 +34,7 @@ export function SignInForm() {
 				});
 				const data = await result.json();
 				if (data.success) {
-					toast.success('signin successful!');
+					toast.success('Signin Successful!');
 					form.reset();
 					router.push('/dashboard/clients');
 				} else {

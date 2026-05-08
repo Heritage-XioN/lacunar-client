@@ -33,7 +33,7 @@ export function SignUpForm() {
 				});
 				const data = await result.json();
 				if (data.success) {
-					toast.success('signup successful!');
+					toast.success('Signup Successful!');
 					form.reset();
 					router.push('/sign-in');
 				} else {
