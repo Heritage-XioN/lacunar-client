@@ -3,24 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { revalidateLogic, useForm } from '@tanstack/react-form';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import {
-	governmentNgoFormValidators,
-	TpConsultantsFormValidators,
-} from '@/lib/zod-schemas';
+import { TpConsultantsFormValidators } from '@/lib/zod-schemas';
 
 export function TpConsultantForm() {
 	const router = useRouter();
@@ -45,7 +31,7 @@ export function TpConsultantForm() {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						category: 'government-ngo',
+						category: 'student-finance-community',
 						formData: value,
 					}),
 				});
